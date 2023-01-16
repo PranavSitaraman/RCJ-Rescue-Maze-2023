@@ -1,3 +1,5 @@
+#include "global.hpp"
+#ifndef VIRTUAL_TEST
 #include "camera.hpp"
 #include <array>
 #include <iostream>
@@ -287,3 +289,4 @@ bool heat_detect(std::uint16_t address)
     }
     catch (std::exception &e) return false;
 }
+#endif

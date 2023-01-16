@@ -1,3 +1,4 @@
+#include "global.hpp"
 #include "Serial.hpp"
 #include <system_error>
 #include <cerrno>
@@ -12,6 +13,7 @@ namespace termios
 {
 #include <termios.h>
 }
+Serial::Serial(std::uint32_t test) {}
 Serial::Serial(const std::string &port, std::uint32_t baud)
 {
     if ((fd = POSIX::open(port.c_str(), O_RDWR | O_NOCTTY)) == -1)

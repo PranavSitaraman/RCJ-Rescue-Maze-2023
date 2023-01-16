@@ -1,5 +1,6 @@
 #ifndef SEARCH_HPP
 #define SEARCH_HPP
+#include "global.hpp"
 #include "matrix.hpp"
 #include "Serial.hpp"
 #include <stack>

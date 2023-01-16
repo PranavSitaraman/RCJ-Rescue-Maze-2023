@@ -1,5 +1,6 @@
 #ifndef SERIAL_HPP
 #define SERIAL_HPP
+#include "global.hpp"
 #include <string_view>
 #include <sstream>
 #include <cstdint>
@@ -19,6 +20,7 @@ public:
         DEC,
         HEX
     };
+    Serial(std::uint32_t test);
     Serial(const std::string &port, std::uint32_t baud);
     ~Serial();
     std::size_t write(const void *buf, std::size_t len) const;

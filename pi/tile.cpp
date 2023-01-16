@@ -1,3 +1,4 @@
+#include "global.hpp"
 #include "tile.hpp"
 #include <iostream>
 tile::tile() : props{} {}

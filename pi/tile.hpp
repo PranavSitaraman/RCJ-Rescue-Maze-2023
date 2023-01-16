@@ -1,5 +1,6 @@
 #ifndef TILE_HPP
 #define TILE_HPP
+#include "global.hpp"
 #include <array>
 #include <cstdint>
 namespace Dir

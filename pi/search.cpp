@@ -1,3 +1,4 @@
+#include "global.hpp"
 #include <queue>
 #include <unordered_map>
 #include <iostream>
@@ -40,8 +41,10 @@ void istream_readv(std::istream &is, T &val, Args &...args)
 Search::Search(Serial &ser, std::mutex &lock, std::condition_variable &cv, const char *path) : map(1, 1, 50), init_x(0), init_y(0), x(0), y(0), cd(Dir::N), serial(ser), map_lock(lock), map_cv(cv), filename(path)
 {
     constexpr std::uint8_t RESET = Dir::W + 1;
+#ifndef VIRTUAL_TEST
     serial.write((std::uint8_t)((1 << 7) | RESET));
     serial.read();
+#endif
 }
 Search::Search(Serial &ser, const char *path, std::mutex &lock, std::condition_variable &cv) : cd(Dir::N), serial(ser), map_lock(lock), map_cv(cv), filename(path)
 {
@@ -52,8 +55,10 @@ Search::Search(Serial &ser, const char *path, std::mutex &lock, std::condition_v
     in.read(reinterpret_cast<char *>(data), width * length * sizeof(*data));
     map = std::move(Matrix(width, length, data));
     constexpr std::uint8_t RESET = Dir::W + 1;
+#ifndef VIRTUAL_TEST
     serial.write((std::uint8_t)((1 << 7) | RESET));
     serial.read();
+#endif
 }
 std::stack<std::uint8_t> Search::search() const
 {
@@ -89,8 +94,15 @@ std::stack<std::uint8_t> Search::search() const
             }
             return dir;
         }
-        for (std::uint8_t i = 0; i < 4; i++)
+        std::queue<uint8_t> next;
+        next.push(cd);
+        next.push((cd + 2) % 4);
+        next.push((cd + 1) % 4);
+        next.push((cd + 3) % 4);
+        while (!next.empty())
         {
+            std::uint8_t i = next.front();
+            next.pop();
             Pos p1 = current_tile;
             if (!map[p1.y][p1.x][i] && !map.adj(p1.y, p1.x, i))
             {
@@ -124,10 +136,12 @@ bool Search::move(std::stack<std::uint8_t> &path)
     while (!path.empty())
     {
         std::uint8_t dir = (path.top() - cd + 4) % 4;
+#ifndef VIRTUAL_TEST
         serial.write((std::uint8_t)(dir | (1 << 7)));
         switch (serial.read())
         {
         case 0:
+        {
             auto x1 = x, y1 = y;
             switch (path.top())
             {
@@ -147,12 +161,16 @@ bool Search::move(std::stack<std::uint8_t> &path)
             for (std::uint8_t i = 0; i < 4; i++)
                 map[y1][x1][i] = true;
             return true;
-        case 2:
+        }
+        case 1:
+            cd = (cd + 2) % 4;
             return false;
         default:
             break;
         }
-        cd = (dir == Dir::S) ? cd : path.top();
+#endif
+        if (dir % 2 == 1)
+            cd = path.top();
         switch (path.top())
         {
         case Dir::N:
@@ -183,11 +201,16 @@ void Search::check_walls()
     std::int32_t x_offset = 0, y_offset = 0;
     for (std::uint8_t i = 0; i < 4; i++)
     {
+#ifndef VIRTUAL_TEST
         serial.write(i);
         std::uint16_t val = -1;
         serial.read(val);
+#else
+        std::uint16_t val = -1;
+        std::cin >> val;
+#endif
         if (val <= 200)
-            map[y][x][(i + cd) % 4] = true;
+            map[y][x][(i + cd + 4) % 4] = true;
     }
     new_length += (!map[y][x][Dir::E] && x == map.length() - 1);
     new_length += (!map[y][x][Dir::W] && x == 0);
@@ -204,7 +227,7 @@ void Search::check_walls()
 void Search::print_map() const
 {
     std::lock_guard<std::mutex> guard(map_lock);
-    std::cout << "w: " << map.width() << " l: " << map.length() << '\n';
+    std::cout << "w: " << map.width() << " l: " << map.length() << " cd: " << uint32_t(cd) << '\n';
     for (std::uint32_t i = 0; i < map.length(); i++)
         std::cout << ((map[0][i][Dir::N]) ? " _" : "  ");
     std::cout << '\n';
@@ -213,7 +236,7 @@ void Search::print_map() const
         std::cout << ((map[i][0][Dir::W]) ? "|" : " ");
         for (std::int32_t j = 0; j < map.length(); j++)
         {
-            char c = (i == y && j == x) ? 'X' : 'O';
+            char c = (i == y && j == x && map[i][j].vis()) ? 'X' : 'O';
             if (map[i][j].vis() && (map[i][j][Dir::S] || map.adj(i, j, Dir::S)))
                 std::cout << "\e[4m" << c << "\e[0m";
             else if ((map[i][j][Dir::S] || map.adj(i, j, Dir::S)) && !map[i][j].vis())
@@ -226,6 +249,7 @@ void Search::print_map() const
         }
         std::cout << '\n';
     }
+    std::cout << std::endl;
 }
 bool Search::get_current_vic() const
 {

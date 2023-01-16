@@ -1,9 +1,10 @@
+#include "global.hpp"
 #include "matrix.hpp"
 #include <cstring>
 #include <random>
 Matrix::Matrix(std::uint32_t width, std::uint32_t length) : w(width), l(length), buf_sz(length * width * PHI), data(new tile[buf_sz]()) {}
 Matrix::Matrix(std::uint32_t width, std::uint32_t length, tile *buf) : w(width), l(length), buf_sz(length * width), data(buf) {}
-Matrix::Matrix(std::uint32_t width, std::uint32_t length, std::uint32_t buf_size) : w(width), l(length), buf_sz(buf_size), data(new tile[buf_size]()) {}
+Matrix::Matrix(std::uint32_t width, std::uint32_t length, std::size_t buf_size) : w(width), l(length), buf_sz(buf_size), data(new tile[buf_size]()) {}
 Matrix &Matrix::operator=(Matrix &&other) noexcept
 {
     std::swap(other.data, data);
@@ -24,28 +25,12 @@ void Matrix::resize(std::int32_t x_offset, std::int32_t y_offset, std::uint32_t 
 {
     if (new_width == w && new_length == l)
         return;
-    if (new_width * new_length > buf_sz)
-    {
-        buf_sz = new_width * new_length * PHI;
-        tile *new_data = new tile[buf_sz]();
-        for (std::uint32_t i = 0; i < w; i++)
-            std::memcpy(new_data + (i + y_offset) * new_length + x_offset, data + i * l, l * sizeof(*data));
-        delete[] data;
-        data = new_data;
-    }
-    else if (y_offset != 0 && x_offset == 0)
-    {
-        std::memmove(data + y_offset * new_length, data, w * l * sizeof(*data));
-        std::memset(data, 0, y_offset * new_length * sizeof(*data));
-    }
-    else if (y_offset != 0 || x_offset != 0)
-    {
-        for (std::int32_t i = w - 1; i >= 0; i--)
-            std::memmove(data + (i + y_offset) * new_length + x_offset, data + i * l, l * sizeof(*data));
-        std::memset(data, 0, y_offset * new_length * sizeof(*data));
-        for (std::uint32_t i = y_offset; i < w; i++)
-            std::memset(data + i * new_length, 0, x_offset * sizeof(*data));
-    }
+    buf_sz = new_width * new_length * PHI;
+    tile *new_data = new tile[buf_sz]();
+    for (std::uint32_t i = 0; i < w; i++)
+        std::memcpy(new_data + (i + y_offset) * new_length + x_offset, data + i * l, l * sizeof(*data));
+    delete[] data;
+    data = new_data;
     w = new_width;
     l = new_length;
 }

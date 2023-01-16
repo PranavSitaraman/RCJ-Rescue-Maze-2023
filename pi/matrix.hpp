@@ -1,5 +1,6 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
+#include "global.hpp"
 #include "tile.hpp"
 class Matrix
 {

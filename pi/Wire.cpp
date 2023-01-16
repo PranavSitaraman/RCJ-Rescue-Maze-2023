@@ -1,3 +1,4 @@
+#include "global.hpp"
 #include <Wire.h>
 #include <system_error>
 namespace POSIX
