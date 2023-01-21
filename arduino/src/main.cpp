@@ -27,9 +27,9 @@ namespace Move
 {
     enum Move : uint8_t
     {
-        FAILURE,
+        BLACK,
         SUCCESS,
-        WALL
+        RAMP
     };
 }
 constexpr auto RESET = Dir::W + 1;
@@ -133,7 +133,7 @@ Move::Move move(const bool dir[4], double a, double motorSpeed)
                         motors[i]->setSpeed(motorSpeed * 3.0 / 2.0);
             }
             motorReset();
-            return Move::WALL;
+            return Move::RAMP;
         }
         uint16_t left = distance(VLX[Dir::W]) / 10;
         uint16_t right = distance(VLX[Dir::E]) / 10;
@@ -191,7 +191,7 @@ Move::Move move(const bool dir[4], double a, double motorSpeed)
                 ;
             motorReset();
             Serial1.write((uint8_t)1);
-            return Move::FAILURE;
+            return Move::BLACK;
         }
     }
     uint16_t up = distance(VLX[Dir::N]) / 10;

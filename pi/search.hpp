@@ -11,8 +11,8 @@ class Search
 public:
     Search(Serial &ser, const char *map_dump, std::mutex &lock, std::condition_variable &cv);
     Search(Serial &ser, std::mutex &lock, std::condition_variable &cv, const char *path);
-    bool move(std::stack<std::uint8_t> &);
-    bool move(std::stack<std::uint8_t> &&);
+    uint8_t move(std::stack<std::uint8_t> &);
+    uint8_t move(std::stack<std::uint8_t> &&);
     void check_walls();
     void print_map() const;
     [[nodiscard]] bool get_current_vic() const;
@@ -24,13 +24,13 @@ public:
     Matrix map;
     std::int32_t x;
     std::int32_t y;
-
-private:
-    std::uint8_t cd;
-    std::mutex &map_lock;
-    std::condition_variable &map_cv;
     std::uint32_t init_x;
     std::uint32_t init_y;
+    std::uint8_t cd;
+
+private:
+    std::mutex &map_lock;
+    std::condition_variable &map_cv;
     Serial &serial;
     const char *filename;
 };

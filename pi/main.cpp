@@ -44,14 +44,50 @@ int main(int argc, char **argv)
 restart:
     while (!(path = search->search()).empty())
     {
-        if (!search->move(path))
+        uint8_t val = search->move(path);
+        switch (val)
         {
+        case 0:
+        {
+            #ifdef VIRTUAL_TEST
+            search->print_map();
+            #endif
+            break;
+        }
+        case 2:
+        {
+            std::uint8_t oldcd = search->cd;
             current = !current;
             map_lock.lock();
             search = &searches[current];
-            search->map[search->y][search->x][Dir::S] = true;
+            search->map[search->y][search->x][(search->cd + 2) % 4] = true;
+            if (oldcd == 2 && current == 0)
+                search->cd = (search->cd + 2) % 4;
             map_lock.unlock();
         }
+        case 1:
+        {
+#ifdef VIRTUAL_TEST
+            search->print_map();
+            search->check_walls();
+            search->print_map();
+            break;
+#else
+            search->check_walls();
+            break;
+#endif
+        }
+        }
+    }
+    if (search == &searches[1])
+    {
+        map_lock.lock();
+        search->unmark_start();
+        map_lock.unlock();
+        search->move(search->search());
+        map_lock.lock();
+        search->map[search->y][search->x][Dir::S] = false;
+        map_lock.unlock();
 #ifdef VIRTUAL_TEST
         search->print_map();
 #endif
@@ -59,13 +95,6 @@ restart:
 #ifdef VIRTUAL_TEST
         search->print_map();
 #endif
-    }
-    if (search == &searches[1])
-    {
-        map_lock.lock();
-        search->map[search->y][search->x][Dir::S] = false;
-        search->unmark_start();
-        map_lock.unlock();
         goto restart;
     }
     map_lock.lock();

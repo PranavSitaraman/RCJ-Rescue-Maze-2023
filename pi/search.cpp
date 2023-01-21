@@ -127,18 +127,24 @@ std::stack<std::uint8_t> Search::search() const
     }
     return dir;
 }
-bool Search::move(std::stack<std::uint8_t> &&path)
+uint8_t Search::move(std::stack<std::uint8_t> &&path)
 {
     return move(path);
 }
-bool Search::move(std::stack<std::uint8_t> &path)
+uint8_t Search::move(std::stack<std::uint8_t> &path)
 {
     while (!path.empty())
     {
         std::uint8_t dir = (path.top() - cd + 4) % 4;
-#ifndef VIRTUAL_TEST
+#ifdef VIRTUAL_TEST
+        uint32_t c;
+        std::cout << "Move status: ";
+        std::cin >> c;
+#else
         serial.write((std::uint8_t)(dir | (1 << 7)));
-        switch (serial.read())
+        unsigned char c = serial.read();
+#endif
+        switch (c)
         {
         case 0:
         {
@@ -160,15 +166,16 @@ bool Search::move(std::stack<std::uint8_t> &path)
             }
             for (std::uint8_t i = 0; i < 4; i++)
                 map[y1][x1][i] = true;
-            return true;
+            return 0;
         }
-        case 1:
+        case 2:
+        {
             cd = (cd + 2) % 4;
-            return false;
+            return 2;
+        }
         default:
             break;
         }
-#endif
         if (dir % 2 == 1)
             cd = path.top();
         switch (path.top())
@@ -192,10 +199,13 @@ bool Search::move(std::stack<std::uint8_t> &path)
         map_cv.notify_one();
         path.pop();
     }
-    return true;
+    return 1;
 }
 void Search::check_walls()
 {
+#ifdef VIRTUAL_TEST
+    std::cout << "Enter walls: ";
+#endif
     std::lock_guard<std::mutex> guard(map_lock);
     std::uint32_t new_width = map.width(), new_length = map.length();
     std::int32_t x_offset = 0, y_offset = 0;
