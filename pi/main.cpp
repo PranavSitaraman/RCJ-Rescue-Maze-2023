@@ -4,6 +4,7 @@
 #include <thread>
 #include <mutex>
 #include <array>
+#include <fstream>
 #include <condition_variable>
 #include <filesystem>
 int main(int argc, char **argv)
@@ -14,6 +15,7 @@ int main(int argc, char **argv)
     std::mutex map_lock;
     std::condition_variable map_cv;
     std::string port;
+    std::uint8_t current = 0;
 #ifndef VIRTUAL_TEST
     for (const auto &entry : std::filesystem::directory_iterator("/sys/class/tty"))
     {
@@ -22,13 +24,22 @@ int main(int argc, char **argv)
             port = "/dev/" / filename;
     }
     Serial serial(port, 9600);
-    std::array<Search, 2> searches{(!std::filesystem::exists("/home/pi/map1")) ? Search(serial, map_lock, map_cv, "/home/pi/map1") : Search(serial, "/home/pi/map1", map_lock, map_cv), (!std::filesystem::exists("/home/pi/map2")) ? Search(serial, map_lock, map_cv, "/home/pi/map1") : Search(serial, "/home/pi/map2", map_lock, map_cv)};
+    std::array<Search, 2> searches{(!std::filesystem::exists("/home/pi/map1")) ? Search(serial, map_lock, map_cv, "/home/pi/map1") : Search(serial, "/home/pi/map1", map_lock, map_cv), (!std::filesystem::exists("/home/pi/map2")) ? Search(serial, map_lock, map_cv, "/home/pi/map2") : Search(serial, "/home/pi/map2", map_lock, map_cv)};
+    if (std::filesystem::exists("/home/pi/num"))
+    {
+        std::ifstream in("/home/pi/num", std::ios::binary);
+        in.read(reinterpret_cast<char *>(&current), sizeof(current));
+    }
 #else
-    Serial serial(NULL);
-    std::array<Search, 2> searches{(!std::filesystem::exists("/home/pranav/map1")) ? Search(serial, map_lock, map_cv, "/home/pranav/map1") : Search(serial, "/home/pranav/map1", map_lock, map_cv), (!std::filesystem::exists("/home/pranav/map2")) ? Search(serial, map_lock, map_cv, "/home/pranav/map1") : Search(serial, "/home/pranav/map2", map_lock, map_cv)};
+    Serial serial(0);
+    std::array<Search, 2> searches{(!std::filesystem::exists("/home/pranav/map1")) ? Search(serial, map_lock, map_cv, "/home/pranav/map1") : Search(serial, "/home/pranav/map1", map_lock, map_cv), (!std::filesystem::exists("/home/pranav/map2")) ? Search(serial, map_lock, map_cv, "/home/pranav/map2") : Search(serial, "/home/pranav/map2", map_lock, map_cv)};
+    if (std::filesystem::exists("/home/pranav/num"))
+    {
+        std::ifstream in("/home/pranav/num", std::ios::binary);
+        in.read(reinterpret_cast<char *>(&current), sizeof(current));
+    }
 #endif
-    Search *search = &searches[0];
-    std::uint8_t current = 0;
+    Search *search = &searches[current];
 #ifndef VIRTUAL_TEST
     std::thread camera_thread(&detect, std::ref(thread_state), &search, std::ref(map_lock), std::ref(map_cv));
 #endif
@@ -47,14 +58,14 @@ restart:
         uint8_t val = search->move(path);
         switch (val)
         {
-        case 0:
+        case Result::result::BLACK:
         {
             #ifdef VIRTUAL_TEST
             search->print_map();
             #endif
             break;
         }
-        case 2:
+        case Result::result::RAMP:
         {
             std::uint8_t oldcd = search->cd;
             current = !current;
@@ -65,7 +76,14 @@ restart:
                 search->cd = (search->cd + 2) % 4;
             map_lock.unlock();
         }
-        case 1:
+        case Result::result::SILVER:
+        {
+            search = &searches[!current];
+            search->dump_map();
+            search = &searches[current];
+            search->dump_map();
+        }
+        case Result::result::SUCCESS:
         {
 #ifdef VIRTUAL_TEST
             search->print_map();

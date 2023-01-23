@@ -4,6 +4,7 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
+#include <string.h>
 #include "search.hpp"
 #include "tile.hpp"
 namespace fs = std::filesystem;
@@ -135,7 +136,10 @@ uint8_t Search::move(std::stack<std::uint8_t> &path)
 {
     while (!path.empty())
     {
+        bool silver = false;
         std::uint8_t dir = (path.top() - cd + 4) % 4;
+        if (dir % 2 == 1)
+            cd = path.top();
 #ifdef VIRTUAL_TEST
         uint32_t c;
         std::cout << "Move status: ";
@@ -146,7 +150,7 @@ uint8_t Search::move(std::stack<std::uint8_t> &path)
 #endif
         switch (c)
         {
-        case 0:
+        case Result::result::BLACK:
         {
             auto x1 = x, y1 = y;
             switch (path.top())
@@ -166,18 +170,20 @@ uint8_t Search::move(std::stack<std::uint8_t> &path)
             }
             for (std::uint8_t i = 0; i < 4; i++)
                 map[y1][x1][i] = true;
-            return 0;
+            return Result::result::BLACK;
         }
-        case 2:
+        case Result::result::RAMP:
         {
             cd = (cd + 2) % 4;
             return 2;
         }
-        default:
+        case Result::result::SILVER:
+        {
+            silver = true;
+        }
+        case Result::result::SUCCESS:
             break;
         }
-        if (dir % 2 == 1)
-            cd = path.top();
         switch (path.top())
         {
         case Dir::N:
@@ -197,9 +203,13 @@ uint8_t Search::move(std::stack<std::uint8_t> &path)
         map[y][x].set_vis();
         map_lock.unlock();
         map_cv.notify_one();
+        if (silver)
+        {
+            return Result::result::SILVER;
+        }
         path.pop();
     }
-    return 1;
+    return Result::result::SUCCESS;
 }
 void Search::check_walls()
 {
@@ -287,6 +297,8 @@ void Search::dump_map()
     ostream_writev(out, x, y, init_x, init_y, cd, width, length);
     const auto *buf = map.buf();
     out.write(reinterpret_cast<const char *>(buf), width * length * sizeof(*buf));
+    std::ofstream num("/home/pranav/num", std::ios::binary);
+    ostream_writev(num, (int32_t)(filename[strlen(filename) - 1] - '1'));
 }
 bool Search::get_current_vis()
 {

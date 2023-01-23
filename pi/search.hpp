@@ -6,6 +6,16 @@
 #include <stack>
 #include <mutex>
 #include <condition_variable>
+namespace Result
+{
+    enum result : std::uint8_t
+    {
+        BLACK,
+        SUCCESS,
+        RAMP,
+        SILVER
+    };
+}
 class Search
 {
 public:
@@ -24,11 +34,11 @@ public:
     Matrix map;
     std::int32_t x;
     std::int32_t y;
-    std::uint32_t init_x;
-    std::uint32_t init_y;
     std::uint8_t cd;
 
 private:
+    std::uint32_t init_x;
+    std::uint32_t init_y;
     std::mutex &map_lock;
     std::condition_variable &map_cv;
     Serial &serial;

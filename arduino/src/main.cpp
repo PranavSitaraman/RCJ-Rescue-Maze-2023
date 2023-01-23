@@ -29,13 +29,15 @@ namespace Move
     {
         BLACK,
         SUCCESS,
-        RAMP
+        RAMP,
+        SILVER
     };
 }
 constexpr auto RESET = Dir::W + 1;
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 Adafruit_DCMotor *motors[4] = {AFMS.getMotor(1), AFMS.getMotor(2), AFMS.getMotor(3), AFMS.getMotor(4)};
 VL53L0X tof;
+AS726X color;
 Adafruit_BNO055 bno(55);
 Servo servo;
 constexpr uint8_t VLX[]{3, 1, 2, 4};
@@ -111,6 +113,7 @@ int16_t orientation(uint8_t coord, uint16_t port = BOS[0])
 }
 Move::Move move(const bool dir[4], double a, double motorSpeed)
 {
+    bool alreadysilver = false;
     static constexpr uint16_t kp = 2;
     double b = motorSpeed;
     motorSpeed *= 255;
@@ -167,9 +170,37 @@ Move::Move move(const bool dir[4], double a, double motorSpeed)
         else
             for (const auto &motor : motors)
                 motor->setSpeed(motorSpeed);
-        switch (Serial1.read())
+        if (color.takeMeasurements())
         {
-        case 0:
+            float red = color.getCalibratedRed();
+            float green = color.getCalibratedGreen();
+            float blue = color.getCalibratedBlue();
+            const uint16_t BLACK_UPPER_R = 5;
+            const uint16_t BLACK_UPPER_G = 5;
+            const uint16_t BLACK_UPPER_B = 5;
+            const uint16_t SILVER_LOWER_R = 10;
+            const uint16_t SILVER_LOWER_G = 40;
+            const uint16_t SILVER_LOWER_B = 30;
+            if (red < BLACK_UPPER_R && green < BLACK_UPPER_G && blue < BLACK_UPPER_B)
+            {
+                uint16_t reverse = encoder[0];
+                motorReset();
+                for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
+                {
+                    motors[i]->setSpeed(motorSpeed);
+                    motors[i]->run(dir[i] ? BACKWARD : FORWARD);
+                }
+                while (encoder[0] < reverse)
+                    ;
+                motorReset();
+                return Move::BLACK;
+            }
+            if (red > SILVER_LOWER_R && green > SILVER_LOWER_G && blue > SILVER_LOWER_B && !alreadysilver)
+                alreadysilver = true;
+        }
+        if (Serial1.available())
+        {
+            Serial1.read();
             for (const auto &motor : motors)
                 motor->run(RELEASE);
             handleVictim();
@@ -179,19 +210,6 @@ Move::Move move(const bool dir[4], double a, double motorSpeed)
                 motors[i]->run(dir[i] ? FORWARD : BACKWARD);
             }
             break;
-        case 1:
-            uint16_t reverse = encoder[0];
-            motorReset();
-            for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
-            {
-                motors[i]->setSpeed(motorSpeed);
-                motors[i]->run(dir[i] ? BACKWARD : FORWARD);
-            }
-            while (encoder[0] < reverse)
-                ;
-            motorReset();
-            Serial1.write((uint8_t)1);
-            return Move::BLACK;
         }
     }
     uint16_t up = distance(VLX[Dir::N]) / 10;
@@ -203,6 +221,8 @@ Move::Move move(const bool dir[4], double a, double motorSpeed)
         while (down > DIST_THRESH2)
             down = distance(VLX[Dir::S]) / 10;
     motorReset();
+    if (alreadysilver)
+        return Move::SILVER;
     return Move::SUCCESS;
 }
 bool forward(double a = 35, double motorSpeed = 0.5)
@@ -239,6 +259,9 @@ void right(double a = 90, double motorSpeed = 0.5, uint16_t port = BOS[0])
 }
 void setup()
 {
+    color.begin(Wire, 3, 2);
+    color.setIntegrationTime(1);
+    color.enableBulb();
     pinMode(6, OUTPUT);
     analogWrite(6, 168);
     Serial.begin(9600);

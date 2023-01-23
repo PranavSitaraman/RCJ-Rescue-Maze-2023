@@ -41,9 +41,6 @@ namespace Color
         UNKNOWN
     };
 }
-Color::color color_detect(const cv::Mat &frame);
-Letter::letter letter_detect(cv::Mat &frame);
-bool heat_detect(std::uint16_t address);
 void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lock, std::condition_variable &map_cv)
 {
     Wire.begin();
@@ -58,10 +55,6 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
         }
     }
     Serial serial(port, 9600);
-    AS726X color;
-    color.begin(Wire, 3, 2);
-    color.setIntegrationTime(1);
-    color.enableBulb();
     std::array<cv::VideoCapture, 2> caps{cv::VideoCapture(0, cv::CAP_V4L2), cv::VideoCapture(1, cv::CAP_V4L2)};
     for (auto &cap : caps)
     {
@@ -111,11 +104,6 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             case Letter::UNKNOWN:
                 break;
             }
-            if (heat_detect(heat_addrs[i]))
-            {
-                n_kits++;
-                std::cout << "heat\n";
-            }
             if (n_kits || vic)
             {
                 cond_lock.lock();
@@ -125,41 +113,8 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 serial.write(n_kits);
                 serial.write(i);
             }
-            try
-            {
-                if (color.takeMeasurements())
-                {
-                    auto red = color.getCalibratedRed();
-                    auto green = color.getCalibratedGreen();
-                    auto blue = color.getCalibratedBlue();
-                    constexpr auto BLACK_UPPER_R = 5;
-                    constexpr auto BLACK_UPPER_G = 5;
-                    constexpr auto BLACK_UPPER_B = 5;
-                    constexpr auto SILVER_LOWER_R = 10;
-                    constexpr auto SILVER_LOWER_G = 40;
-                    constexpr auto SILVER_LOWER_B = 30;
-                    if (red < BLACK_UPPER_R && green < BLACK_UPPER_G && blue < BLACK_UPPER_B)
-                    {
-                        serial.write(static_cast<std::uint8_t>(1));
-                        serial.read();
-                    }
-                    cond_lock.lock();
-                    if ((*search)->get_current_vis() && (red > SILVER_LOWER_R && green > SILVER_LOWER_G && blue > SILVER_LOWER_B))
-                    {
-                        cond_lock.unlock();
-                        std::cout << "saving map\n";
-                        (*search)->dump_map();
-                    }
-                    else
-                        cond_lock.unlock();
-                }
-            }
-            catch (std::exception &e)
-            {
-            }
         }
     }
-    color.disableBulb();
 }
 Color::color color_detect(const cv::Mat &frame)
 {
@@ -266,27 +221,5 @@ Letter::letter letter_detect(cv::Mat &frame)
     if (*max == 0)
         return Letter::UNKNOWN;
     return static_cast<Letter::letter>(max - letterCount.begin());
-}
-bool heat_detect(std::uint16_t address)
-{
-    try
-    {
-        Wire.beginTransmission(address);
-        Wire.write(0x06);
-        Wire.endTransmission(false);
-        Wire.requestFrom(address, 3, false);
-        double ambient = (Wire.read() | (Wire.read() << 8)) * .02 - 273.15;
-        Wire.read();
-        Wire.beginTransmission(address);
-        Wire.write(0x07);
-        Wire.endTransmission(false);
-        Wire.requestFrom(address, 3, false);
-        double obj = (Wire.read() | (Wire.read() << 8)) * .02 - 273.15;
-        Wire.read();
-        if (ambient > 50 || obj > 50)
-            return false;
-        return (obj - ambient) >= 10;
-    }
-    catch (std::exception &e) return false;
 }
 #endif

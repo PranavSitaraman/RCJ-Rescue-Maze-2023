@@ -12,6 +12,8 @@ enum class ThreadState : std::uint8_t
     STARTED,
     STOP
 };
+Color::color color_detect(const cv::Mat &frame);
+Letter::letter letter_detect(cv::Mat &frame);
 void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lock, std::condition_variable &map_cv);
 #endif
 #endif
