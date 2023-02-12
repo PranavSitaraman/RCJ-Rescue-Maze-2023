@@ -25,7 +25,7 @@ namespace Coord
 }
 namespace Move
 {
-    enum Move : uint8_t
+    enum : uint8_t
     {
         BLACK,
         SUCCESS,
@@ -42,12 +42,13 @@ Adafruit_BNO055 bno(55);
 Servo servo;
 constexpr uint8_t VLX[]{6, 0, 1, 7};
 constexpr uint8_t BOS[]{5};
+constexpr uint8_t COLOR[]{2};
 constexpr uint8_t ENC = 2;
 constexpr uint8_t DIST_THRESH = 10;
 constexpr uint8_t DIST_THRESH2 = 5;
 constexpr uint8_t LED = 12;
 constexpr uint8_t SERVOPIN = 9;
-constexpr double WHEEL_RAD = 3.25;
+constexpr double WHEEL_RAD = 3;
 volatile uint16_t encoder[4]{};
 void encoderISR()
 {
@@ -95,6 +96,11 @@ void handleVictim()
     digitalWrite(LED, LOW);
     for (uint8_t i = 0; i < val; i++)
         drop(side);
+}
+uint16_t color(uint16_t port = COLOR[0])
+{
+    tcaselect(port);
+    return tof.readRangeContinuousMillimeters();
 }
 uint16_t distance(uint16_t port = VLX[0])
 {
