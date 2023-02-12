@@ -8,7 +8,6 @@ add_compile_options(-fsanitize=address -static-libasan)
 add_link_options(-fsanitize=address -static-libasan)
 add_compile_definitions(ARDUINO=100)
 add_executable(maze-2023 main.cpp matrix.cpp matrix.hpp search.cpp search.hpp Serial.cpp Serial.hpp tile.cpp tile.hpp
-        camera.cpp camera.hpp arduino-compat/Wire.h Wire.cpp SparkFun_AS726X_Arduino_Library/src/AS726X.cpp
-        SparkFun_AS726X_Arduino_Library/src/AS726X.h arduino-compat/Arduino.h)
-target_include_directories(maze-2023 PRIVATE ${OpenCV_INCLUDE_DIRS} SparkFun_AS726X_Arduino_Library/src arduino-compat)
+        camera.cpp camera.hpp arduino-compat/Wire.h Wire.cpp arduino-compat/Arduino.h)
+target_include_directories(maze-2023 PRIVATE ${OpenCV_INCLUDE_DIRS} arduino-compat)
 target_link_libraries(maze-2023 PRIVATE ${OpenCV_LIBRARIES} stdc++fs)

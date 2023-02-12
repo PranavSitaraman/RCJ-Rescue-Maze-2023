@@ -97,11 +97,6 @@ void handleVictim()
     for (uint8_t i = 0; i < val; i++)
         drop(side);
 }
-uint16_t color(uint16_t port = COLOR[0])
-{
-    tcaselect(port);
-    return tof.readRangeContinuousMillimeters();
-}
 uint16_t distance(uint16_t port = VLX[0])
 {
     tcaselect(port);
@@ -179,9 +174,9 @@ Move::Move move(const bool dir[4], double a, double motorSpeed)
                 motor->setSpeed(motorSpeed);
         if (color.takeMeasurements())
         {
-            float red = color.getCalibratedRed();
-            float green = color.getCalibratedGreen();
-            float blue = color.getCalibratedBlue();
+            tcaselect(COLOR[0]);
+            uint16_t red, green, blue, c;
+            tcs.getRawData(&red, &green, &blue, &c);
             const uint16_t BLACK_UPPER_R = 5;
             const uint16_t BLACK_UPPER_G = 5;
             const uint16_t BLACK_UPPER_B = 5;
@@ -286,6 +281,11 @@ void setup()
         tof.init();
         tof.setTimeout(500);
         tof.startContinuous();
+    }
+    for (auto port : COLOR)
+    {
+        tcaselect(port);
+        tcs.begin();
     }
     attachInterrupt(digitalPinToInterrupt(ENC), &encoderISR, RISING);
     servo.attach(SERVOPIN);
