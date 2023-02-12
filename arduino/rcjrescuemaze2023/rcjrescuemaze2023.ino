@@ -40,13 +40,12 @@ VL53L0X tof;
 AS726X color;
 Adafruit_BNO055 bno(55);
 Servo servo;
-constexpr uint8_t VLX[]{6, 0, 1, 7};
-constexpr uint8_t BOS[]{5};
+constexpr uint8_t VLX[]{3, 1, 2, 4};
+constexpr uint8_t BOS[]{5, 6};
 constexpr uint8_t ENC = 2;
 constexpr uint8_t DIST_THRESH = 10;
 constexpr uint8_t DIST_THRESH2 = 5;
 constexpr uint8_t LED = 12;
-constexpr uint8_t SERVOPIN = 9;
 constexpr double WHEEL_RAD = 3.25;
 volatile uint16_t encoder[4]{};
 void encoderISR()
@@ -125,11 +124,11 @@ Move::Move move(const bool dir[4], double a, double motorSpeed)
     }
     while (encoder[0] < ((75 * 48 * a) / (2 * PI * WHEEL_RAD)) * (0.25) / (b))
     {
-        if (abs(orientation(Coord::Y, BOS[0])) > 15)
+        if (abs(orientation(Coord::Y, BOS[1])) > 15)
         {
-            while (abs(orientation(Coord::Y, BOS[0])) > 15)
+            while (abs(orientation(Coord::Y, BOS[1])) > 15)
             {
-                if (orientation(Coord::Y, BOS[0]) < -15)
+                if (orientation(Coord::Y, BOS[1]) < -15)
                     for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
                         motors[i]->setSpeed(motorSpeed * 0.5);
                 else
@@ -282,7 +281,7 @@ void setup()
         tof.startContinuous();
     }
     attachInterrupt(digitalPinToInterrupt(ENC), &encoderISR, RISING);
-    servo.attach(SERVOPIN);
+    servo.attach(9);
     servo.write(60);
     pinMode(LED, OUTPUT);
     motorReset();

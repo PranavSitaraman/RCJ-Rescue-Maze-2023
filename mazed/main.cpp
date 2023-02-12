@@ -35,7 +35,7 @@ int main()
             }
             if (!pid)
             {
-                if (execl("/home/pi/maze-2023/pi/build/maze-2023", "maze-2023", NULL) == -1)
+                if (execl("/home/pi/RCJ-Rescue-Maze-2023/pi/build/maze-2023", "maze-2023", NULL) == -1)
                 {
                     std::perror("execl");
                     std::exit(1);
