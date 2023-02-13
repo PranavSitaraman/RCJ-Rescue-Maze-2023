@@ -1,9 +1,9 @@
 #include <Adafruit_BNO055.h>
-#include <Adafruit_MotorShield.h>
 #include <Arduino.h>
+#include <MeMegaPi.h>
+#include <Adafruit_TCS34725.h>
 #include <VL53L0X.h>
 #include <Wire.h>
-#include <Servo.h>
 namespace Dir
 {
     enum : uint8_t
@@ -25,7 +25,7 @@ namespace Coord
 }
 namespace Move
 {
-    enum Move : uint8_t
+    enum : uint8_t
     {
         BLACK,
         SUCCESS,
@@ -34,23 +34,24 @@ namespace Move
     };
 }
 constexpr auto RESET = Dir::W + 1;
-Adafruit_MotorShield AFMS = Adafruit_MotorShield();
-Adafruit_DCMotor *motors[4] = {AFMS.getMotor(1), AFMS.getMotor(2), AFMS.getMotor(3), AFMS.getMotor(4)};
+MeMegaPiDCMotor motors[2] = {MeMegaPiDCMotor(PORT1B), MeMegaPiDCMotor(PORT2B)};
 VL53L0X tof;
-AS726X color;
+Adafruit_TCS34725 color = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_614MS, TCS34725_GAIN_1X);
 Adafruit_BNO055 bno(55);
 Servo servo;
-constexpr uint8_t VLX[]{3, 1, 2, 4};
-constexpr uint8_t BOS[]{5, 6};
+constexpr uint8_t VLX[]{6, 0, 1, 7};
+constexpr uint8_t BOS[]{5};
+constexpr uint8_t COLOR[]{2};
 constexpr uint8_t ENC = 2;
 constexpr uint8_t DIST_THRESH = 10;
 constexpr uint8_t DIST_THRESH2 = 5;
 constexpr uint8_t LED = 12;
-constexpr double WHEEL_RAD = 3.25;
-volatile uint16_t encoder[4]{};
+constexpr uint8_t SERVOPIN = 9;
+constexpr double WHEEL_RAD = 3;
+volatile uint16_t encoder = 0;
 void encoderISR()
 {
-    encoder[0]++;
+    encoder++;
 }
 void tcaselect(uint16_t i)
 {
@@ -60,10 +61,9 @@ void tcaselect(uint16_t i)
 }
 void motorReset()
 {
-    for (const auto &motor : motors)
-        motor->run(RELEASE);
-    for (uint8_t i = 0; i < sizeof(encoder) / sizeof(encoder[0]); i++)
-        encoder[i] = 0;
+    for (const auto motor : motors)
+        motor.stop();
+    encoder = 0;
 }
 void (*resetFunc)(void) = 0;
 void drop(int side)
@@ -111,29 +111,26 @@ int16_t orientation(uint8_t coord, uint16_t port = BOS[0])
         return event.orientation.y;
     return event.orientation.z;
 }
-Move::Move move(const bool dir[4], double a, double motorSpeed)
+uint8_t move(const bool dir[4], double a, double motorSpeed)
 {
     bool alreadysilver = false;
     static constexpr uint16_t kp = 2;
     double b = motorSpeed;
     motorSpeed *= 255;
     for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
+        motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
+    while (encoder < ((75 * 48 * a) / (2 * PI * WHEEL_RAD)) * (0.25) / (b))
     {
-        motors[i]->setSpeed(motorSpeed);
-        motors[i]->run(dir[i] ? FORWARD : BACKWARD);
-    }
-    while (encoder[0] < ((75 * 48 * a) / (2 * PI * WHEEL_RAD)) * (0.25) / (b))
-    {
-        if (abs(orientation(Coord::Y, BOS[1])) > 15)
+        if (abs(orientation(Coord::Y, BOS[0])) > 15)
         {
-            while (abs(orientation(Coord::Y, BOS[1])) > 15)
+            while (abs(orientation(Coord::Y, BOS[0])) > 15)
             {
-                if (orientation(Coord::Y, BOS[1]) < -15)
+                if (orientation(Coord::Y, BOS[0]) < -15)
                     for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
-                        motors[i]->setSpeed(motorSpeed * 0.5);
+                        motors[i].run(motorSpeed * 0.5 * (dir[i] ? 1 : -1));
                 else
                     for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
-                        motors[i]->setSpeed(motorSpeed * 3.0 / 2.0);
+                        motors[i].run(motorSpeed * 1.5 * (dir[i] ? 1 : -1));
             }
             motorReset();
             return Move::RAMP;
@@ -148,67 +145,52 @@ Move::Move move(const bool dir[4], double a, double motorSpeed)
             break;
         if (left <= 2 * DIST_THRESH && right <= 2 * DIST_THRESH)
         {
-            motors[0]->setSpeed(motorSpeed + kp * (left - right));
-            motors[3]->setSpeed(motorSpeed + kp * (left - right));
-            motors[1]->setSpeed(motorSpeed + kp * (right - left));
-            motors[2]->setSpeed(motorSpeed + kp * (right - left));
+            motors[0].run((motorSpeed + kp * (left - right)) * (dir[0] ? 1 : -1));
+            motors[1].run((motorSpeed + kp * (right - left)) * (dir[1] ? 1 : -1));
         }
         else if (left <= 2 * DIST_THRESH && right > 2 * DIST_THRESH)
         {
-            motors[0]->setSpeed(motorSpeed + kp * (left - DIST_THRESH));
-            motors[3]->setSpeed(motorSpeed + kp * (left - DIST_THRESH));
-            motors[1]->setSpeed(motorSpeed + kp * (DIST_THRESH - left));
-            motors[2]->setSpeed(motorSpeed + kp * (DIST_THRESH - left));
+            motors[0].run((motorSpeed + kp * (left - DIST_THRESH)) * (dir[0] ? 1 : -1));
+            motors[1].run((motorSpeed + kp * (DIST_THRESH - left)) * (dir[1] ? 1 : -1));
         }
         else if (left > 2 * DIST_THRESH && right <= 2 * DIST_THRESH)
         {
-            motors[0]->setSpeed(motorSpeed + kp * (DIST_THRESH - right));
-            motors[3]->setSpeed(motorSpeed + kp * (DIST_THRESH - right));
-            motors[1]->setSpeed(motorSpeed + kp * (right - DIST_THRESH));
-            motors[2]->setSpeed(motorSpeed + kp * (right - DIST_THRESH));
+            motors[0].run((motorSpeed + kp * (DIST_THRESH - right)) * (dir[0] ? 1 : -1));
+            motors[1].run((motorSpeed + kp * (right - DIST_THRESH)) * (dir[1] ? 1 : -1));
         }
         else
-            for (const auto &motor : motors)
-                motor->setSpeed(motorSpeed);
-        if (color.takeMeasurements())
+            for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
+                motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
+        tcaselect(COLOR[0]);
+        uint16_t red, green, blue, c;
+        color.getRawData(&red, &green, &blue, &c);
+        const uint16_t BLACK_UPPER_R = 5;
+        const uint16_t BLACK_UPPER_G = 5;
+        const uint16_t BLACK_UPPER_B = 5;
+        const uint16_t SILVER_LOWER_R = 10;
+        const uint16_t SILVER_LOWER_G = 40;
+        const uint16_t SILVER_LOWER_B = 30;
+        if (red < BLACK_UPPER_R && green < BLACK_UPPER_G && blue < BLACK_UPPER_B)
         {
-            float red = color.getCalibratedRed();
-            float green = color.getCalibratedGreen();
-            float blue = color.getCalibratedBlue();
-            const uint16_t BLACK_UPPER_R = 5;
-            const uint16_t BLACK_UPPER_G = 5;
-            const uint16_t BLACK_UPPER_B = 5;
-            const uint16_t SILVER_LOWER_R = 10;
-            const uint16_t SILVER_LOWER_G = 40;
-            const uint16_t SILVER_LOWER_B = 30;
-            if (red < BLACK_UPPER_R && green < BLACK_UPPER_G && blue < BLACK_UPPER_B)
-            {
-                uint16_t reverse = encoder[0];
-                motorReset();
-                for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
-                {
-                    motors[i]->setSpeed(motorSpeed);
-                    motors[i]->run(dir[i] ? BACKWARD : FORWARD);
-                }
-                while (encoder[0] < reverse)
-                    ;
-                motorReset();
-                return Move::BLACK;
-            }
-            if (red > SILVER_LOWER_R && green > SILVER_LOWER_G && blue > SILVER_LOWER_B && !alreadysilver)
-                alreadysilver = true;
+            uint16_t reverse = encoder;
+            motorReset();
+            for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
+                motors[i].run(motorSpeed * (dir[i] ? -1 : 1));
+            while (encoder < reverse)
+                ;
+            motorReset();
+            return Move::BLACK;
         }
+        if (red > SILVER_LOWER_R && green > SILVER_LOWER_G && blue > SILVER_LOWER_B && !alreadysilver)
+            alreadysilver = true;
         if (Serial1.available())
         {
             Serial1.read();
-            for (const auto &motor : motors)
-                motor->run(RELEASE);
+            for (const auto motor : motors)
+                motor.stop();
             handleVictim();
-            for (uint8_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
-            {
-                motors[i]->setSpeed(motorSpeed);
-                motors[i]->run(dir[i] ? FORWARD : BACKWARD);
-            }
+            for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
+                motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
             break;
         }
     }
@@ -235,12 +217,11 @@ bool backward(double a = 35, double motorSpeed = 0.5)
     static constexpr bool dir[]{false, true, true, false};
     return move(dir, a, motorSpeed);
 }
-void turn(const bool dir[4], double a, double motorSpeed, uint16_t port)
+void turn(const bool dir[2], double a, double motorSpeed, uint16_t port)
 {
     for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
     {
-        motors[i]->setSpeed(motorSpeed);
-        motors[i]->run(dir[i] ? FORWARD : BACKWARD);
+        motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
     }
     int16_t start = orientation(Coord::X, port);
     while (abs((orientation(Coord::X, port) - start + 540) % 360 - 180) < a)
@@ -249,25 +230,21 @@ void turn(const bool dir[4], double a, double motorSpeed, uint16_t port)
 }
 void left(double a = 90, double motorSpeed = 0.5, uint16_t port = BOS[0])
 {
-    static constexpr bool dir[4]{true, true, true, true};
+    static constexpr bool dir[2]{true, true};
     turn(dir, a, motorSpeed * 255, port);
 }
 void right(double a = 90, double motorSpeed = 0.5, uint16_t port = BOS[0])
 {
-    static constexpr bool dir[4]{};
+    static constexpr bool dir[2]{false, false};
     turn(dir, a, motorSpeed * 255, port);
 }
 void setup()
 {
-    color.begin(Wire, 3, 2);
-    color.setIntegrationTime(1);
-    color.enableBulb();
     pinMode(6, OUTPUT);
     analogWrite(6, 168);
     Serial.begin(9600);
     Serial1.begin(9600);
     Wire.begin();
-    AFMS.begin();
     for (auto port : BOS)
     {
         tcaselect(port);
@@ -280,8 +257,13 @@ void setup()
         tof.setTimeout(500);
         tof.startContinuous();
     }
+    for (auto port : COLOR)
+    {
+        tcaselect(port);
+        color.begin();
+    }
     attachInterrupt(digitalPinToInterrupt(ENC), &encoderISR, RISING);
-    servo.attach(9);
+    servo.attach(SERVOPIN);
     servo.write(60);
     pinMode(LED, OUTPUT);
     motorReset();
