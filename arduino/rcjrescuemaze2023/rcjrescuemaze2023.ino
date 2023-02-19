@@ -248,6 +248,8 @@ void setup()
 {
     // pinMode(6, OUTPUT);
     // analogWrite(6, 168);
+    Serial.begin(9600);
+      Serial.println("reset");
     Serial2.begin(9600);
     // Serial1.begin(9600);
     Wire.begin();
@@ -275,6 +277,8 @@ void setup()
     motorReset();
     while(Serial2.available())
       Serial2.read();
+    Serial2.end();
+    Serial2.begin(9600);
     Serial2.write((uint8_t)1);
 }
 void loop()
@@ -282,6 +286,7 @@ void loop()
     if (Serial2.available())
     {
         uint8_t command = Serial2.read();
+        Serial.println(command);
         if (command >> 7)
         {
             command &= ~(1 << 7);
