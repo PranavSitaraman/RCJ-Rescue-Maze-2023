@@ -276,10 +276,13 @@ void setup()
     // pinMode(LED, OUTPUT);
     motorReset();
     while(Serial2.available())
-      Serial2.read();
+    {
+      delay(10);
+      Serial.println(Serial2.read());
+    }
+    Serial2.write((uint8_t)1);
     Serial2.end();
     Serial2.begin(9600);
-    Serial2.write((uint8_t)1);
 }
 void loop()
 {
