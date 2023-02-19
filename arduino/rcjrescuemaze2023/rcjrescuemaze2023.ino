@@ -4,6 +4,7 @@
 #include <Adafruit_TCS34725.h>
 #include <VL53L0X.h>
 #include <Wire.h>
+#include <avr/wdt.h>
 namespace Dir
 {
     enum : uint8_t
@@ -65,7 +66,12 @@ void motorReset()
         motor.stop();
     encoder = 0;
 }
-void (*resetFunc)(void) = 0;
+void resetFunc()
+{
+  MCUSR = 0;
+	wdt_enable(WDTO_250MS);
+	while (1);
+}
 void drop(int side)
 {
     if (side == 0)
@@ -267,6 +273,8 @@ void setup()
     // servo.write(60);
     // pinMode(LED, OUTPUT);
     motorReset();
+    while(Serial2.available())
+      Serial2.read();
     Serial2.write((uint8_t)1);
 }
 void loop()
