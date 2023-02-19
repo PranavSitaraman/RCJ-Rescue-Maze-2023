@@ -240,10 +240,10 @@ void right(double a = 90, double motorSpeed = 0.5, uint16_t port = BOS[0])
 }
 void setup()
 {
-    pinMode(6, OUTPUT);
-    analogWrite(6, 168);
-    Serial.begin(9600);
-    Serial1.begin(9600);
+    // pinMode(6, OUTPUT);
+    // analogWrite(6, 168);
+    Serial2.begin(9600);
+    // Serial1.begin(9600);
     Wire.begin();
     for (auto port : BOS)
     {
@@ -262,18 +262,18 @@ void setup()
         tcaselect(port);
         color.begin();
     }
-    attachInterrupt(digitalPinToInterrupt(ENC), &encoderISR, RISING);
-    servo.attach(SERVOPIN);
-    servo.write(60);
-    pinMode(LED, OUTPUT);
+    // attachInterrupt(digitalPinToInterrupt(ENC), &encoderISR, RISING);
+    // servo.attach(SERVOPIN);
+    // servo.write(60);
+    // pinMode(LED, OUTPUT);
     motorReset();
-    Serial.write((uint8_t)1);
+    Serial2.write((uint8_t)1);
 }
 void loop()
 {
-    if (Serial.available())
+    if (Serial2.available())
     {
-        uint8_t command = Serial.read();
+        uint8_t command = Serial2.read();
         if (command >> 7)
         {
             command &= ~(1 << 7);
@@ -298,12 +298,12 @@ void loop()
                 resetFunc();
                 break;
             }
-            Serial.write(state);
+            Serial2.write(state);
         }
         else
         {
             uint16_t val = distance(VLX[command]);
-            Serial.write((uint8_t *)&val, sizeof(val));
+            Serial2.write((uint8_t *)&val, sizeof(val));
         }
     }
 }
