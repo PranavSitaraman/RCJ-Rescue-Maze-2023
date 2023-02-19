@@ -6,6 +6,26 @@
 #include <mutex>
 #include <condition_variable>
 #include "search.hpp"
+namespace Letter
+{
+    enum letter : std::uint8_t
+    {
+        H,
+        S,
+        U,
+        UNKNOWN
+    };
+}
+namespace Color
+{
+    enum color : std::uint8_t
+    {
+        RED,
+        YELLOW,
+        GREEN,
+        UNKNOWN
+    };
+}
 enum class ThreadState : std::uint8_t
 {
     INIT,
