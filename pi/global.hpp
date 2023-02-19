@@ -1,4 +1,4 @@
 #ifndef GLOBAL_HPP
 #define GLOBAL_HPP
-#define VIRTUAL_TEST
+// #define VIRTUAL_TEST
 #endif
