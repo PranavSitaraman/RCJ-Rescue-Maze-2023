@@ -124,6 +124,6 @@ restart:
 #endif
 #ifndef VIRTUAL_TEST
     thread_state = ThreadState::STOP;
-    camera_thread.join();
+    //camera_thread.join();
 #endif
 }
