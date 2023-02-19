@@ -11,7 +11,6 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/ml.hpp>
-#include <AS726X.h>
 #include "search.hpp"
 #include <Wire.h>
 #include "Serial.hpp"
