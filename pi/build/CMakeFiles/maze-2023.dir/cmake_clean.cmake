@@ -1,6 +1,5 @@
 file(REMOVE_RECURSE
   "CMakeFiles/maze-2023.dir/Serial.cpp.o"
-  "CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o"
   "CMakeFiles/maze-2023.dir/Wire.cpp.o"
   "CMakeFiles/maze-2023.dir/camera.cpp.o"
   "CMakeFiles/maze-2023.dir/main.cpp.o"

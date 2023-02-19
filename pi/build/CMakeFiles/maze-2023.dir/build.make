@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi"
+CMAKE_SOURCE_DIR = /home/pi/RCJ-Rescue-Maze-2023/pi
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build"
+CMAKE_BINARY_DIR = /home/pi/RCJ-Rescue-Maze-2023/pi/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/maze-2023.dir/depend.make
@@ -59,107 +59,94 @@ include CMakeFiles/maze-2023.dir/flags.make
 
 CMakeFiles/maze-2023.dir/main.cpp.o: CMakeFiles/maze-2023.dir/flags.make
 CMakeFiles/maze-2023.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/maze-2023.dir/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/main.cpp.o -c "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/main.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/maze-2023.dir/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/main.cpp.o -c /home/pi/RCJ-Rescue-Maze-2023/pi/main.cpp
 
 CMakeFiles/maze-2023.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/maze-2023.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/main.cpp" > CMakeFiles/maze-2023.dir/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pi/RCJ-Rescue-Maze-2023/pi/main.cpp > CMakeFiles/maze-2023.dir/main.cpp.i
 
 CMakeFiles/maze-2023.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/maze-2023.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/main.cpp" -o CMakeFiles/maze-2023.dir/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pi/RCJ-Rescue-Maze-2023/pi/main.cpp -o CMakeFiles/maze-2023.dir/main.cpp.s
 
 CMakeFiles/maze-2023.dir/matrix.cpp.o: CMakeFiles/maze-2023.dir/flags.make
 CMakeFiles/maze-2023.dir/matrix.cpp.o: ../matrix.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/maze-2023.dir/matrix.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/matrix.cpp.o -c "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/matrix.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/maze-2023.dir/matrix.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/matrix.cpp.o -c /home/pi/RCJ-Rescue-Maze-2023/pi/matrix.cpp
 
 CMakeFiles/maze-2023.dir/matrix.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/maze-2023.dir/matrix.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/matrix.cpp" > CMakeFiles/maze-2023.dir/matrix.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pi/RCJ-Rescue-Maze-2023/pi/matrix.cpp > CMakeFiles/maze-2023.dir/matrix.cpp.i
 
 CMakeFiles/maze-2023.dir/matrix.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/maze-2023.dir/matrix.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/matrix.cpp" -o CMakeFiles/maze-2023.dir/matrix.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pi/RCJ-Rescue-Maze-2023/pi/matrix.cpp -o CMakeFiles/maze-2023.dir/matrix.cpp.s
 
 CMakeFiles/maze-2023.dir/search.cpp.o: CMakeFiles/maze-2023.dir/flags.make
 CMakeFiles/maze-2023.dir/search.cpp.o: ../search.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/maze-2023.dir/search.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/search.cpp.o -c "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/search.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/maze-2023.dir/search.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/search.cpp.o -c /home/pi/RCJ-Rescue-Maze-2023/pi/search.cpp
 
 CMakeFiles/maze-2023.dir/search.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/maze-2023.dir/search.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/search.cpp" > CMakeFiles/maze-2023.dir/search.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pi/RCJ-Rescue-Maze-2023/pi/search.cpp > CMakeFiles/maze-2023.dir/search.cpp.i
 
 CMakeFiles/maze-2023.dir/search.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/maze-2023.dir/search.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/search.cpp" -o CMakeFiles/maze-2023.dir/search.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pi/RCJ-Rescue-Maze-2023/pi/search.cpp -o CMakeFiles/maze-2023.dir/search.cpp.s
 
 CMakeFiles/maze-2023.dir/Serial.cpp.o: CMakeFiles/maze-2023.dir/flags.make
 CMakeFiles/maze-2023.dir/Serial.cpp.o: ../Serial.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/maze-2023.dir/Serial.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/Serial.cpp.o -c "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/Serial.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/maze-2023.dir/Serial.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/Serial.cpp.o -c /home/pi/RCJ-Rescue-Maze-2023/pi/Serial.cpp
 
 CMakeFiles/maze-2023.dir/Serial.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/maze-2023.dir/Serial.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/Serial.cpp" > CMakeFiles/maze-2023.dir/Serial.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pi/RCJ-Rescue-Maze-2023/pi/Serial.cpp > CMakeFiles/maze-2023.dir/Serial.cpp.i
 
 CMakeFiles/maze-2023.dir/Serial.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/maze-2023.dir/Serial.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/Serial.cpp" -o CMakeFiles/maze-2023.dir/Serial.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pi/RCJ-Rescue-Maze-2023/pi/Serial.cpp -o CMakeFiles/maze-2023.dir/Serial.cpp.s
 
 CMakeFiles/maze-2023.dir/tile.cpp.o: CMakeFiles/maze-2023.dir/flags.make
 CMakeFiles/maze-2023.dir/tile.cpp.o: ../tile.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/maze-2023.dir/tile.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/tile.cpp.o -c "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/tile.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/maze-2023.dir/tile.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/tile.cpp.o -c /home/pi/RCJ-Rescue-Maze-2023/pi/tile.cpp
 
 CMakeFiles/maze-2023.dir/tile.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/maze-2023.dir/tile.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/tile.cpp" > CMakeFiles/maze-2023.dir/tile.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pi/RCJ-Rescue-Maze-2023/pi/tile.cpp > CMakeFiles/maze-2023.dir/tile.cpp.i
 
 CMakeFiles/maze-2023.dir/tile.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/maze-2023.dir/tile.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/tile.cpp" -o CMakeFiles/maze-2023.dir/tile.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pi/RCJ-Rescue-Maze-2023/pi/tile.cpp -o CMakeFiles/maze-2023.dir/tile.cpp.s
 
 CMakeFiles/maze-2023.dir/camera.cpp.o: CMakeFiles/maze-2023.dir/flags.make
 CMakeFiles/maze-2023.dir/camera.cpp.o: ../camera.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/maze-2023.dir/camera.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/camera.cpp.o -c "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/camera.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/maze-2023.dir/camera.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/camera.cpp.o -c /home/pi/RCJ-Rescue-Maze-2023/pi/camera.cpp
 
 CMakeFiles/maze-2023.dir/camera.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/maze-2023.dir/camera.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/camera.cpp" > CMakeFiles/maze-2023.dir/camera.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pi/RCJ-Rescue-Maze-2023/pi/camera.cpp > CMakeFiles/maze-2023.dir/camera.cpp.i
 
 CMakeFiles/maze-2023.dir/camera.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/maze-2023.dir/camera.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/camera.cpp" -o CMakeFiles/maze-2023.dir/camera.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pi/RCJ-Rescue-Maze-2023/pi/camera.cpp -o CMakeFiles/maze-2023.dir/camera.cpp.s
 
 CMakeFiles/maze-2023.dir/Wire.cpp.o: CMakeFiles/maze-2023.dir/flags.make
 CMakeFiles/maze-2023.dir/Wire.cpp.o: ../Wire.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/maze-2023.dir/Wire.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/Wire.cpp.o -c "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/Wire.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/maze-2023.dir/Wire.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/Wire.cpp.o -c /home/pi/RCJ-Rescue-Maze-2023/pi/Wire.cpp
 
 CMakeFiles/maze-2023.dir/Wire.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/maze-2023.dir/Wire.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/Wire.cpp" > CMakeFiles/maze-2023.dir/Wire.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/pi/RCJ-Rescue-Maze-2023/pi/Wire.cpp > CMakeFiles/maze-2023.dir/Wire.cpp.i
 
 CMakeFiles/maze-2023.dir/Wire.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/maze-2023.dir/Wire.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/Wire.cpp" -o CMakeFiles/maze-2023.dir/Wire.cpp.s
-
-CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o: CMakeFiles/maze-2023.dir/flags.make
-CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o: ../SparkFun_AS726X_Arduino_Library/src/AS726X.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o -c "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp"
-
-CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp" > CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.i
-
-CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp" -o CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/pi/RCJ-Rescue-Maze-2023/pi/Wire.cpp -o CMakeFiles/maze-2023.dir/Wire.cpp.s
 
 # Object files for target maze-2023
 maze__2023_OBJECTS = \
@@ -169,8 +156,7 @@ maze__2023_OBJECTS = \
 "CMakeFiles/maze-2023.dir/Serial.cpp.o" \
 "CMakeFiles/maze-2023.dir/tile.cpp.o" \
 "CMakeFiles/maze-2023.dir/camera.cpp.o" \
-"CMakeFiles/maze-2023.dir/Wire.cpp.o" \
-"CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o"
+"CMakeFiles/maze-2023.dir/Wire.cpp.o"
 
 # External object files for target maze-2023
 maze__2023_EXTERNAL_OBJECTS =
@@ -182,10 +168,24 @@ maze-2023: CMakeFiles/maze-2023.dir/Serial.cpp.o
 maze-2023: CMakeFiles/maze-2023.dir/tile.cpp.o
 maze-2023: CMakeFiles/maze-2023.dir/camera.cpp.o
 maze-2023: CMakeFiles/maze-2023.dir/Wire.cpp.o
-maze-2023: CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o
 maze-2023: CMakeFiles/maze-2023.dir/build.make
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_gapi.so.4.5.5
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_highgui.so.4.5.5
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_ml.so.4.5.5
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_objdetect.so.4.5.5
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_photo.so.4.5.5
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_stitching.so.4.5.5
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_video.so.4.5.5
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_videoio.so.4.5.5
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_imgcodecs.so.4.5.5
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_dnn.so.4.5.5
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_calib3d.so.4.5.5
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_features2d.so.4.5.5
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_flann.so.4.5.5
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_imgproc.so.4.5.5
+maze-2023: /home/pi/opencv-4.5.5/build/lib/libopencv_core.so.4.5.5
 maze-2023: CMakeFiles/maze-2023.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable maze-2023"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX executable maze-2023"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/maze-2023.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -198,6 +198,6 @@ CMakeFiles/maze-2023.dir/clean:
 .PHONY : CMakeFiles/maze-2023.dir/clean
 
 CMakeFiles/maze-2023.dir/depend:
-	cd "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi" "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi" "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build" "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build" "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build/CMakeFiles/maze-2023.dir/DependInfo.cmake" --color=$(COLOR)
+	cd /home/pi/RCJ-Rescue-Maze-2023/pi/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/pi/RCJ-Rescue-Maze-2023/pi /home/pi/RCJ-Rescue-Maze-2023/pi /home/pi/RCJ-Rescue-Maze-2023/pi/build /home/pi/RCJ-Rescue-Maze-2023/pi/build /home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles/maze-2023.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/maze-2023.dir/depend
 

@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi"
+CMAKE_SOURCE_DIR = /home/pi/RCJ-Rescue-Maze-2023/pi
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build"
+CMAKE_BINARY_DIR = /home/pi/RCJ-Rescue-Maze-2023/pi/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build/CMakeFiles" "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build/CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles /home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/build/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -149,33 +149,6 @@ Serial.s: Serial.cpp.s
 Serial.cpp.s:
 	$(MAKE) -f CMakeFiles/maze-2023.dir/build.make CMakeFiles/maze-2023.dir/Serial.cpp.s
 .PHONY : Serial.cpp.s
-
-SparkFun_AS726X_Arduino_Library/src/AS726X.o: SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o
-
-.PHONY : SparkFun_AS726X_Arduino_Library/src/AS726X.o
-
-# target to build an object file
-SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o:
-	$(MAKE) -f CMakeFiles/maze-2023.dir/build.make CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o
-.PHONY : SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o
-
-SparkFun_AS726X_Arduino_Library/src/AS726X.i: SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.i
-
-.PHONY : SparkFun_AS726X_Arduino_Library/src/AS726X.i
-
-# target to preprocess a source file
-SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.i:
-	$(MAKE) -f CMakeFiles/maze-2023.dir/build.make CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.i
-.PHONY : SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.i
-
-SparkFun_AS726X_Arduino_Library/src/AS726X.s: SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.s
-
-.PHONY : SparkFun_AS726X_Arduino_Library/src/AS726X.s
-
-# target to generate assembly for a file
-SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.s:
-	$(MAKE) -f CMakeFiles/maze-2023.dir/build.make CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.s
-.PHONY : SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.s
 
 Wire.o: Wire.cpp.o
 
@@ -346,14 +319,11 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... rebuild_cache"
-	@echo "... edit_cache"
 	@echo "... maze-2023"
+	@echo "... edit_cache"
 	@echo "... Serial.o"
 	@echo "... Serial.i"
 	@echo "... Serial.s"
-	@echo "... SparkFun_AS726X_Arduino_Library/src/AS726X.o"
-	@echo "... SparkFun_AS726X_Arduino_Library/src/AS726X.i"
-	@echo "... SparkFun_AS726X_Arduino_Library/src/AS726X.s"
 	@echo "... Wire.o"
 	@echo "... Wire.i"
 	@echo "... Wire.s"

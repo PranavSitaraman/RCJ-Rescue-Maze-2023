@@ -5,17 +5,10 @@ CMakeFiles/maze-2023.dir/Serial.cpp.o: ../Serial.cpp
 CMakeFiles/maze-2023.dir/Serial.cpp.o: ../Serial.hpp
 CMakeFiles/maze-2023.dir/Serial.cpp.o: ../global.hpp
 
-CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o: ../arduino-compat/Arduino.h
-CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o: ../arduino-compat/Wire.h
-CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o: ../SparkFun_AS726X_Arduino_Library/src/AS726X.cpp
-CMakeFiles/maze-2023.dir/SparkFun_AS726X_Arduino_Library/src/AS726X.cpp.o: ../SparkFun_AS726X_Arduino_Library/src/AS726X.h
-
 CMakeFiles/maze-2023.dir/Wire.cpp.o: ../arduino-compat/Wire.h
 CMakeFiles/maze-2023.dir/Wire.cpp.o: ../Wire.cpp
 CMakeFiles/maze-2023.dir/Wire.cpp.o: ../global.hpp
 
-CMakeFiles/maze-2023.dir/camera.cpp.o: ../SparkFun_AS726X_Arduino_Library/src/AS726X.h
-CMakeFiles/maze-2023.dir/camera.cpp.o: ../arduino-compat/Arduino.h
 CMakeFiles/maze-2023.dir/camera.cpp.o: ../arduino-compat/Wire.h
 CMakeFiles/maze-2023.dir/camera.cpp.o: ../Serial.hpp
 CMakeFiles/maze-2023.dir/camera.cpp.o: ../camera.cpp

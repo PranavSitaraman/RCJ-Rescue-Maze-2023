@@ -6,5 +6,5 @@ CXX_FLAGS =   -fsanitize=address -static-libasan -std=gnu++17
 
 CXX_DEFINES = -DARDUINO=100
 
-CXX_INCLUDES = -I"/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/SparkFun_AS726X_Arduino_Library/src" -I"/mnt/c/Users/Pranav Sitaraman/Documents/Programming/Arduino/RCJ Rescue Maze 2023/pi/arduino-compat" 
+CXX_INCLUDES = -I/home/pi/RCJ-Rescue-Maze-2023/pi/arduino-compat -isystem /home/pi/opencv-4.5.5/build -isystem /home/pi/opencv-4.5.5/include -isystem /home/pi/opencv-4.5.5/modules/core/include -isystem /home/pi/opencv-4.5.5/modules/flann/include -isystem /home/pi/opencv-4.5.5/modules/imgproc/include -isystem /home/pi/opencv-4.5.5/modules/ml/include -isystem /home/pi/opencv-4.5.5/modules/photo/include -isystem /home/pi/opencv-4.5.5/modules/dnn/include -isystem /home/pi/opencv-4.5.5/modules/features2d/include -isystem /home/pi/opencv-4.5.5/modules/imgcodecs/include -isystem /home/pi/opencv-4.5.5/modules/videoio/include -isystem /home/pi/opencv-4.5.5/modules/calib3d/include -isystem /home/pi/opencv-4.5.5/modules/highgui/include -isystem /home/pi/opencv-4.5.5/modules/objdetect/include -isystem /home/pi/opencv-4.5.5/modules/stitching/include -isystem /home/pi/opencv-4.5.5/modules/ts/include -isystem /home/pi/opencv-4.5.5/modules/video/include -isystem /home/pi/opencv-4.5.5/modules/gapi/include 
 
