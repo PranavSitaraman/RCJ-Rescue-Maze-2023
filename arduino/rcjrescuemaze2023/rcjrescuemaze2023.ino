@@ -319,6 +319,7 @@ void loop()
         else
         {
             uint16_t val = distance(VLX[command]);
+            Serial.println(val);
             Serial2.write((uint8_t *)&val, sizeof(val));
         }
     }
