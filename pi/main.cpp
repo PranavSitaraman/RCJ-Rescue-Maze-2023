@@ -23,6 +23,7 @@ int main(int argc, char **argv)
         if (filename.generic_string().rfind("ttyAMA0", 0) == 0)
             port = "/dev/" / filename;
     }
+    port = "/dev/serial0";
     Serial serial(port, 9600);
     while (serial.available())
       serial.read();
