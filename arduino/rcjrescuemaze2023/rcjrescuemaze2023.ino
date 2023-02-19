@@ -249,7 +249,6 @@ void setup()
     // pinMode(6, OUTPUT);
     // analogWrite(6, 168);
     Serial.begin(9600);
-      Serial.println("reset");
     Serial2.begin(9600);
     // Serial1.begin(9600);
     Wire.begin();
@@ -277,12 +276,10 @@ void setup()
     motorReset();
     while(Serial2.available())
     {
-      delay(10);
-      Serial.println(Serial2.read());
+      Serial2.read();
+      delay(100);
     }
     Serial2.write((uint8_t)1);
-    Serial2.end();
-    Serial2.begin(9600);
 }
 void loop()
 {
