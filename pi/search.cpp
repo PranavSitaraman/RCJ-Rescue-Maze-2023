@@ -60,6 +60,7 @@ Search::Search(Serial &ser, const char *path, std::mutex &lock, std::condition_v
     constexpr std::uint8_t RESET = Dir::W + 1;
 #ifndef VIRTUAL_TEST
     serial.write((std::uint8_t)((1 << 7) | RESET));
+    while (serial.available() == 0);
     serial.read();
 #endif
 }
