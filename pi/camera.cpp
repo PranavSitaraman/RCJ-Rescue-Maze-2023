@@ -21,26 +21,6 @@ constexpr auto IM_DEBUG = false;
 constexpr auto SIZE_THRESH = 60;
 constexpr auto SLICE_SIZE_THRESH = 50;
 constexpr auto CONT_SIZE_THRESH = 20000;
-namespace Letter
-{
-    enum letter : std::uint8_t
-    {
-        H,
-        S,
-        U,
-        UNKNOWN
-    };
-}
-namespace Color
-{
-    enum color : std::uint8_t
-    {
-        RED,
-        YELLOW,
-        GREEN,
-        UNKNOWN
-    };
-}
 void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lock, std::condition_variable &map_cv)
 {
     Wire.begin();
