@@ -4,6 +4,7 @@
 #include <Adafruit_TCS34725.h>
 #include <VL53L0X.h>
 #include <Wire.h>
+#include <avr/wdt.h>
 namespace Dir
 {
     enum : uint8_t
@@ -65,7 +66,13 @@ void motorReset()
         motor.stop();
     encoder = 0;
 }
-void (*resetFunc)(void) = 0;
+void resetFunc()
+{
+    MCUSR = 0;
+    wdt_enable(WDTO_250MS);
+    while (true)
+        ;
+}
 void drop(int side)
 {
     if (side == 0)
@@ -111,7 +118,7 @@ int16_t orientation(uint8_t coord, uint16_t port = BOS[0])
         return event.orientation.y;
     return event.orientation.z;
 }
-uint8_t move(const bool dir[4], double a, double motorSpeed)
+uint8_t move(const bool dir[2], double a, double motorSpeed)
 {
     bool alreadysilver = false;
     static constexpr uint16_t kp = 2;
@@ -127,10 +134,10 @@ uint8_t move(const bool dir[4], double a, double motorSpeed)
             {
                 if (orientation(Coord::Y, BOS[0]) < -15)
                     for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
-                        motors[i].run(motorSpeed * 0.5 * (dir[i] ? 1 : -1));
+                        motors[i].run(motorSpeed * 1.5 * (dir[i] ? 1 : -1));
                 else
                     for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
-                        motors[i].run(motorSpeed * 1.5 * (dir[i] ? 1 : -1));
+                        motors[i].run(motorSpeed * 0.5 * (dir[i] ? 1 : -1));
             }
             motorReset();
             return Move::RAMP;
@@ -209,12 +216,12 @@ uint8_t move(const bool dir[4], double a, double motorSpeed)
 }
 bool forward(double a = 35, double motorSpeed = 0.5)
 {
-    static constexpr bool dir[]{true, false, false, true};
+    static constexpr bool dir[]{true, false};
     return move(dir, a, motorSpeed);
 }
 bool backward(double a = 35, double motorSpeed = 0.5)
 {
-    static constexpr bool dir[]{false, true, true, false};
+    static constexpr bool dir[]{false, true};
     return move(dir, a, motorSpeed);
 }
 void turn(const bool dir[2], double a, double motorSpeed, uint16_t port)
@@ -230,20 +237,19 @@ void turn(const bool dir[2], double a, double motorSpeed, uint16_t port)
 }
 void left(double a = 90, double motorSpeed = 0.5, uint16_t port = BOS[0])
 {
-    static constexpr bool dir[2]{true, true};
+    static constexpr bool dir[]{false, false};
     turn(dir, a, motorSpeed * 255, port);
 }
 void right(double a = 90, double motorSpeed = 0.5, uint16_t port = BOS[0])
 {
-    static constexpr bool dir[2]{false, false};
+    static constexpr bool dir[]{true, true};
     turn(dir, a, motorSpeed * 255, port);
 }
 void setup()
 {
-    pinMode(6, OUTPUT);
-    analogWrite(6, 168);
     Serial.begin(9600);
-    Serial1.begin(9600);
+    Serial.println("begin setup");
+    Serial2.begin(9600);
     Wire.begin();
     for (auto port : BOS)
     {
@@ -262,18 +268,28 @@ void setup()
         tcaselect(port);
         color.begin();
     }
-    attachInterrupt(digitalPinToInterrupt(ENC), &encoderISR, RISING);
-    servo.attach(SERVOPIN);
-    servo.write(60);
-    pinMode(LED, OUTPUT);
+    // Serial1.begin(9600);
+    // attachInterrupt(digitalPinToInterrupt(ENC), &encoderISR, RISING);
+    // servo.attach(SERVOPIN);
+    // servo.write(60);
+    // pinMode(LED, OUTPUT);
     motorReset();
-    Serial.write((uint8_t)1);
+    while (Serial2.available())
+    {
+        Serial2.read();
+        delay(100);
+    }
+    Serial.println("end setup");
+    Serial2.write((uint8_t)1);
+    right();
+    left();
 }
 void loop()
 {
-    if (Serial.available())
+    if (Serial2.available())
     {
-        uint8_t command = Serial.read();
+        uint8_t command = Serial2.read();
+        Serial.println(command);
         if (command >> 7)
         {
             command &= ~(1 << 7);
@@ -298,12 +314,14 @@ void loop()
                 resetFunc();
                 break;
             }
-            Serial.write(state);
+            Serial2.write(state);
         }
         else
         {
             uint16_t val = distance(VLX[command]);
-            Serial.write((uint8_t *)&val, sizeof(val));
+            Serial.println(val);
+            Serial2.write((uint8_t *)&val, sizeof(val));
         }
     }
+    delay(100);
 }
