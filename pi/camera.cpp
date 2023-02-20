@@ -27,7 +27,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
     for (const auto &entry : fs::directory_iterator("/sys/class/tty"))
     {
         const auto &filename = entry.path().filename();
-        if (filename.generic_string().rfind("ttyAMA", 0) == 0)
+        if (filename.generic_string().rfind("ttyS0", 0) == 0)
         {
             port = "/dev/" / filename;
             break;
