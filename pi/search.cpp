@@ -45,8 +45,7 @@ Search::Search(Serial &ser, std::mutex &lock, std::condition_variable &cv, const
 #ifndef VIRTUAL_TEST
     serial.write((std::uint8_t)((1 << 7) | RESET));
     while (serial.available() == 0);
-    uint8_t a = serial.read();
-    std::cout << a << std::endl;
+    serial.read();
 #endif
 }
 Search::Search(Serial &ser, const char *path, std::mutex &lock, std::condition_variable &cv) : cd(Dir::N), serial(ser), map_lock(lock), map_cv(cv), filename(path)
