@@ -12,7 +12,6 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/ml.hpp>
 #include "search.hpp"
-#include <Wire.h>
 #include "Serial.hpp"
 namespace fs = std::filesystem;
 constexpr auto CANNY_ON = true;
@@ -22,7 +21,6 @@ constexpr auto SLICE_SIZE_THRESH = 50;
 constexpr auto CONT_SIZE_THRESH = 20000;
 void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lock, std::condition_variable &map_cv)
 {
-    Wire.begin();
     std::string port;
     for (const auto &entry : fs::directory_iterator("/sys/class/tty"))
     {
