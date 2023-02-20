@@ -150,33 +150,6 @@ Serial.cpp.s:
 	$(MAKE) -f CMakeFiles/maze-2023.dir/build.make CMakeFiles/maze-2023.dir/Serial.cpp.s
 .PHONY : Serial.cpp.s
 
-Wire.o: Wire.cpp.o
-
-.PHONY : Wire.o
-
-# target to build an object file
-Wire.cpp.o:
-	$(MAKE) -f CMakeFiles/maze-2023.dir/build.make CMakeFiles/maze-2023.dir/Wire.cpp.o
-.PHONY : Wire.cpp.o
-
-Wire.i: Wire.cpp.i
-
-.PHONY : Wire.i
-
-# target to preprocess a source file
-Wire.cpp.i:
-	$(MAKE) -f CMakeFiles/maze-2023.dir/build.make CMakeFiles/maze-2023.dir/Wire.cpp.i
-.PHONY : Wire.cpp.i
-
-Wire.s: Wire.cpp.s
-
-.PHONY : Wire.s
-
-# target to generate assembly for a file
-Wire.cpp.s:
-	$(MAKE) -f CMakeFiles/maze-2023.dir/build.make CMakeFiles/maze-2023.dir/Wire.cpp.s
-.PHONY : Wire.cpp.s
-
 camera.o: camera.cpp.o
 
 .PHONY : camera.o
@@ -324,9 +297,6 @@ help:
 	@echo "... Serial.o"
 	@echo "... Serial.i"
 	@echo "... Serial.s"
-	@echo "... Wire.o"
-	@echo "... Wire.i"
-	@echo "... Wire.s"
 	@echo "... camera.o"
 	@echo "... camera.i"
 	@echo "... camera.s"

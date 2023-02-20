@@ -5,7 +5,6 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
   "/home/pi/RCJ-Rescue-Maze-2023/pi/Serial.cpp" "/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles/maze-2023.dir/Serial.cpp.o"
-  "/home/pi/RCJ-Rescue-Maze-2023/pi/Wire.cpp" "/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles/maze-2023.dir/Wire.cpp.o"
   "/home/pi/RCJ-Rescue-Maze-2023/pi/camera.cpp" "/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles/maze-2023.dir/camera.cpp.o"
   "/home/pi/RCJ-Rescue-Maze-2023/pi/main.cpp" "/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles/maze-2023.dir/main.cpp.o"
   "/home/pi/RCJ-Rescue-Maze-2023/pi/matrix.cpp" "/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles/maze-2023.dir/matrix.cpp.o"
