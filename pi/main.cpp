@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 #endif
     Search *search = &searches[current];
 #ifndef VIRTUAL_TEST
-    // std::thread camera_thread(&detect, std::ref(thread_state), &search, std::ref(map_lock), std::ref(map_cv));
+    std::thread camera_thread(&detect, std::ref(thread_state), &search, std::ref(map_lock), std::ref(map_cv));
 #endif
     std::stack<std::uint8_t> path;
     search->check_walls();
@@ -51,8 +51,8 @@ int main(int argc, char **argv)
     search->print_map();
 #endif
 #ifndef VIRTUAL_TEST
-    // while (thread_state == ThreadState::INIT)
-    //    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    while (thread_state == ThreadState::INIT)
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
 #endif
 restart:
     while (!(path = search->search()).empty())
