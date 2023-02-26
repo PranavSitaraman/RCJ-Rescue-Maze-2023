@@ -234,8 +234,8 @@ void Search::check_walls()
         std::cout << val << " ";
         if (val <= 100)
             map[y][x][(i + cd + 4) % 4] = true;
-        std::cout << std::endl;
     }
+    std::cout << std::endl;
     new_length += (!map[y][x][Dir::E] && x == map.length() - 1);
     new_length += (!map[y][x][Dir::W] && x == 0);
     new_width += (!map[y][x][Dir::S] && y == map.width() - 1);
