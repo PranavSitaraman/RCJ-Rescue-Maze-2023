@@ -189,11 +189,11 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     return Move::SILVER;
   return Move::SUCCESS;
 }
-bool forward(double a = 35, double motorSpeed = DEFAULT_MOTOR) {
+bool forward(double a = 30, double motorSpeed = DEFAULT_MOTOR) {
   static constexpr bool dir[]{ true, false };
   return move(dir, a, motorSpeed);
 }
-bool backward(double a = 35, double motorSpeed = DEFAULT_MOTOR) {
+bool backward(double a = 30, double motorSpeed = DEFAULT_MOTOR) {
   static constexpr bool dir[]{ false, true };
   return move(dir, a, motorSpeed);
 }
