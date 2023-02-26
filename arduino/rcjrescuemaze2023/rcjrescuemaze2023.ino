@@ -37,12 +37,14 @@ Servo servo;
 constexpr uint8_t VLX[]{ 6, 0, 1, 7 };
 constexpr uint8_t BOS[]{ 5 };
 constexpr uint8_t COLOR[]{ 2 };
-constexpr uint8_t ENC = 2;
-constexpr uint8_t DIST_THRESH = 10;
+constexpr uint8_t ENC = 18;
+constexpr uint8_t DIST_THRESH = 5;
 constexpr uint8_t DIST_THRESH2 = 5;
 constexpr uint8_t LED = 12;
 constexpr uint8_t SERVOPIN = 9;
-constexpr double WHEEL_RAD = 3;
+constexpr double WHEEL_RAD = 3.6;
+constexpr uint16_t TICKS_PER_ROTATION = 368;
+constexpr double DEFAULT_MOTOR = 0.3;
 volatile uint16_t encoder = 0;
 void encoderISR() {
   encoder++;
@@ -108,7 +110,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
   motorSpeed *= 255;
   for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
     motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
-  while (encoder < ((75 * 48 * a) / (2 * PI * WHEEL_RAD)) * (0.25) / (b)) {
+  while (encoder < ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD))) {
     if (abs(orientation(Coord::Y, BOS[0])) > 15) {
       while (abs(orientation(Coord::Y, BOS[0])) > 15) {
         if (orientation(Coord::Y, BOS[0]) < -15)
@@ -185,11 +187,11 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     return Move::SILVER;
   return Move::SUCCESS;
 }
-bool forward(double a = 35, double motorSpeed = 0.5) {
+bool forward(double a = 35, double motorSpeed = DEFAULT_MOTOR) {
   static constexpr bool dir[]{ true, false };
   return move(dir, a, motorSpeed);
 }
-bool backward(double a = 35, double motorSpeed = 0.5) {
+bool backward(double a = 35, double motorSpeed = DEFAULT_MOTOR) {
   static constexpr bool dir[]{ false, true };
   return move(dir, a, motorSpeed);
 }
@@ -202,11 +204,11 @@ void turn(const bool dir[2], double a, double motorSpeed, uint16_t port) {
     ;
   motorReset();
 }
-void left(double a = 90, double motorSpeed = 0.5, uint16_t port = BOS[0]) {
+void left(double a = 90, double motorSpeed = DEFAULT_MOTOR, uint16_t port = BOS[0]) {
   static constexpr bool dir[]{ false, false };
   turn(dir, a, motorSpeed * 255, port);
 }
-void right(double a = 90, double motorSpeed = 0.5, uint16_t port = BOS[0]) {
+void right(double a = 90, double motorSpeed = DEFAULT_MOTOR, uint16_t port = BOS[0]) {
   static constexpr bool dir[]{ true, true };
   turn(dir, a, motorSpeed * 255, port);
 }
@@ -230,7 +232,7 @@ void setup() {
     color.begin();
   }
   // Serial1.begin(9600);
-  // attachInterrupt(digitalPinToInterrupt(ENC), &encoderISR, RISING);
+  attachInterrupt(digitalPinToInterrupt(ENC), &encoderISR, RISING);
   // servo.attach(SERVOPIN);
   // servo.write(60);
   // pinMode(LED, OUTPUT);
@@ -241,8 +243,6 @@ void setup() {
   }
   Serial.println("end setup");
   Serial2.write((uint8_t)1);
-  right();
-  left();
 }
 void loop() {
   if (Serial2.available()) {
