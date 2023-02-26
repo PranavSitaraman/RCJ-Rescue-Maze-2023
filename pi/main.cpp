@@ -47,9 +47,7 @@ int main(int argc, char **argv)
 #endif
     std::stack<std::uint8_t> path;
     search->check_walls();
-#ifdef VIRTUAL_TEST
     search->print_map();
-#endif
 #ifndef VIRTUAL_TEST
     while (thread_state == ThreadState::INIT)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -62,9 +60,7 @@ restart:
         {
         case Result::result::BLACK:
         {
-            #ifdef VIRTUAL_TEST
             search->print_map();
-            #endif
             break;
         }
         case Result::result::RAMP:
@@ -87,15 +83,10 @@ restart:
         }
         case Result::result::SUCCESS:
         {
-#ifdef VIRTUAL_TEST
             search->print_map();
             search->check_walls();
             search->print_map();
             break;
-#else
-            search->check_walls();
-            break;
-#endif
         }
         }
     }
@@ -108,24 +99,18 @@ restart:
         map_lock.lock();
         search->map[search->y][search->x][Dir::S] = false;
         map_lock.unlock();
-#ifdef VIRTUAL_TEST
         search->print_map();
-#endif
         search->check_walls();
-#ifdef VIRTUAL_TEST
         search->print_map();
-#endif
         goto restart;
     }
     map_lock.lock();
     search->unmark_start();
     map_lock.unlock();
     search->move(search->search());
-#ifdef VIRTUAL_TEST
     search->print_map();
-#endif
 #ifndef VIRTUAL_TEST
     thread_state = ThreadState::STOP;
-    //camera_thread.join();
+    camera_thread.join();
 #endif
 }
