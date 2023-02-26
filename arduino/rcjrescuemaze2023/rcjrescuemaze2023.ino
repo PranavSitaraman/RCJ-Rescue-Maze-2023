@@ -34,7 +34,7 @@ VL53L0X tof;
 Adafruit_TCS34725 color = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_614MS, TCS34725_GAIN_1X);
 Adafruit_BNO055 bno(55);
 Servo servo;
-constexpr uint8_t VLX[]{ 6, 0, 1, 7 };
+constexpr uint8_t VLX[]{ 6, 0, 1, 7};
 constexpr uint8_t BOS[]{ 5 };
 constexpr uint8_t COLOR[]{ 2 };
 constexpr uint8_t ENC = 18;
