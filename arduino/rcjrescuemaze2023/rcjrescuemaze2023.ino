@@ -38,8 +38,8 @@ constexpr uint8_t VLX[]{ 6, 0, 1, 7};
 constexpr uint8_t BOS[]{ 5 };
 constexpr uint8_t COLOR[]{ 2 };
 constexpr uint8_t ENC = 18;
-constexpr uint8_t DIST_THRESH = 5;
-constexpr uint8_t DIST_THRESH2 = 5;
+constexpr uint8_t DIST_THRESH = 12;
+constexpr uint8_t DIST_THRESH2 = 12;
 constexpr uint8_t LED = 12;
 constexpr uint8_t SERVOPIN = 9;
 constexpr double WHEEL_RAD = 3.6;
@@ -91,7 +91,7 @@ void handleVictim() {
 }
 uint16_t distance(uint16_t port = VLX[0]) {
   tcaselect(port);
-  return tof.readRangeContinuousMillimeters();
+  return tof.readRangeSingleMillimeters();
 }
 int16_t orientation(uint8_t coord, uint16_t port = BOS[0]) {
   tcaselect(port);
@@ -143,6 +143,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     } else
       for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
         motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
+    /*
     tcaselect(COLOR[0]);
     uint16_t red, green, blue, c;
     color.getRawData(&red, &green, &blue, &c);
@@ -173,6 +174,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
         motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
       break;
     }
+    */
   }
   uint16_t up = distance(VLX[Dir::N]) / 10;
   uint16_t down = distance(VLX[Dir::S]) / 10;
@@ -223,9 +225,9 @@ void setup() {
   }
   for (auto port : VLX) {
     tcaselect(port);
-    tof.init();
     tof.setTimeout(500);
-    tof.startContinuous();
+    tof.init();
+    tof.setMeasurementTimingBudget(100000);
   }
   for (auto port : COLOR) {
     tcaselect(port);

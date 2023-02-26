@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 #endif
     Search *search = &searches[current];
 #ifndef VIRTUAL_TEST
-    std::thread camera_thread(&detect, std::ref(thread_state), &search, std::ref(map_lock), std::ref(map_cv));
+    // std::thread camera_thread(&detect, std::ref(thread_state), &search, std::ref(map_lock), std::ref(map_cv));
 #endif
     std::stack<std::uint8_t> path;
     search->check_walls();
@@ -65,6 +65,7 @@ restart:
         }
         case Result::result::RAMP:
         {
+            /*
             std::uint8_t oldcd = search->cd;
             current = !current;
             map_lock.lock();
@@ -73,13 +74,16 @@ restart:
             if (oldcd == 2 && current == 0)
                 search->cd = (search->cd + 2) % 4;
             map_lock.unlock();
+            */
         }
         case Result::result::SILVER:
         {
+            /*
             search = &searches[!current];
             search->dump_map();
             search = &searches[current];
             search->dump_map();
+            */
         }
         case Result::result::SUCCESS:
         {
@@ -111,6 +115,6 @@ restart:
     search->print_map();
 #ifndef VIRTUAL_TEST
     thread_state = ThreadState::STOP;
-    camera_thread.join();
+    // camera_thread.join();
 #endif
 }
