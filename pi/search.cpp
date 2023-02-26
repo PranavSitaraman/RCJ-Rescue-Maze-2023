@@ -147,6 +147,8 @@ uint8_t Search::move(std::stack<std::uint8_t> &path)
         std::cout << "Move status: ";
         std::cin >> c;
 #else
+        std::cout << std::endl;
+        std::cout << dir << std::endl;
         serial.write((std::uint8_t)(dir | (1 << 7)));
         unsigned char c = serial.read();
 #endif
