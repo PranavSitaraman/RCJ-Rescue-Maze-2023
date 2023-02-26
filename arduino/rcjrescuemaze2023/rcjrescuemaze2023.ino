@@ -245,7 +245,6 @@ void setup() {
   }
   Serial.println("end setup");
   Serial2.write((uint8_t)1);
-  forward();
 }
 void loop() {
   if (Serial2.available()) {
