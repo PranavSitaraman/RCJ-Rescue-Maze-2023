@@ -15,7 +15,6 @@
 #include "Serial.hpp"
 namespace fs = std::filesystem;
 constexpr auto CANNY_ON = true;
-constexpr auto IM_DEBUG = true;
 constexpr auto SIZE_THRESH = 60;
 constexpr auto SLICE_SIZE_THRESH = 50;
 constexpr auto CONT_SIZE_THRESH = 20000;
@@ -85,6 +84,9 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 cond_lock.lock();
                 (*search)->set_current_vic();
                 cond_lock.unlock();
+                if (n_kits == 3) cout << "Letter: H" << endl;
+                else if (n_kits == 2) cout << "Letter: S" << endl;
+                else if (n_kits == 1) cout << "Color!" << endl;
                 /*
                 serial.write(static_cast<std::uint8_t>(0));
                 serial.write(n_kits);
@@ -103,19 +105,9 @@ Color::color color_detect(const cv::Mat &frame)
     cv::Mat filt_frame;
     for (std::uint8_t i = 0; i < bounds.size() && color == Color::UNKNOWN; i += 2)
     {
-        if constexpr (IM_DEBUG)
-        {
-            cv::imshow("hsv", frame);
-            cv::waitKey(1);
-        }
         cv::inRange(frame, bounds[i], bounds[i + 1], filt_frame);
         auto nonzero = cv::countNonZero(filt_frame);
         auto size = filt_frame.cols * filt_frame.rows;
-        if constexpr (IM_DEBUG)
-        {
-            cv::imshow("bw", filt_frame);
-            cv::waitKey(1);
-        }
         if (double cur_ratio; (cur_ratio = nonzero / static_cast<double>(size)) > color_ratio)
         {
             color = static_cast<Color::color>(i / 2);
@@ -129,11 +121,6 @@ Letter::letter letter_detect(cv::Mat &frame)
 {
     cv::rotate(frame, frame, cv::ROTATE_180);
     std::array<int, 3> letterCount{};
-    if constexpr (IM_DEBUG)
-    {
-        cv::imshow("win_u", frame);
-        cv::waitKey(1);
-    }
     cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
     cv::GaussianBlur(frame, frame, cv::Size(5, 5), 0);
     if constexpr (CANNY_ON)
