@@ -15,7 +15,7 @@
 #include "Serial.hpp"
 namespace fs = std::filesystem;
 constexpr auto CANNY_ON = true;
-constexpr auto IM_DEBUG = false;
+constexpr auto IM_DEBUG = true;
 constexpr auto SIZE_THRESH = 60;
 constexpr auto SLICE_SIZE_THRESH = 50;
 constexpr auto CONT_SIZE_THRESH = 20000;
@@ -40,7 +40,6 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
         cap.set(cv::CAP_PROP_FRAME_HEIGHT, 240);
     }
     state = ThreadState::STARTED;
-    constexpr std::array<std::uint16_t, 2> heat_addrs{0x5a, 0x5b};
     cv::Mat frame;
     while (state != ThreadState::STOP)
     {
@@ -86,9 +85,11 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 cond_lock.lock();
                 (*search)->set_current_vic();
                 cond_lock.unlock();
+                /*
                 serial.write(static_cast<std::uint8_t>(0));
                 serial.write(n_kits);
                 serial.write(i);
+                */
             }
         }
     }

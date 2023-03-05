@@ -105,22 +105,15 @@ int16_t orientation(uint8_t coord, uint16_t port = BOS[0]) {
 }
 uint8_t move(const bool dir[2], double a, double motorSpeed) {
   bool alreadysilver = false;
-  static constexpr uint16_t kp = 2;
+  static constexpr uint16_t kp = 1.3;
   double b = motorSpeed;
   motorSpeed *= 255;
   for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
     motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
   while (encoder < ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD))) {
-    uint16_t up = distance(VLX[Dir::N]) / 10;
-    uint16_t down = distance(VLX[Dir::S]) / 10;
-    if (dir[0] && up < DIST_THRESH2)
-      break;
-    if (!dir[0] && down < DIST_THRESH2)
-      break;
-    /*
-    if (abs(orientation(Coord::Y, BOS[0])) > 15) {
-      while (abs(orientation(Coord::Y, BOS[0])) > 15) {
-        if (orientation(Coord::Y, BOS[0]) < -15)
+    if (abs(orientation(Coord::Y, BOS[0])) > 20) {
+      while (abs(orientation(Coord::Y, BOS[0])) > 20) {
+        if (orientation(Coord::Y, BOS[0]) < -20)
           for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
             motors[i].run(motorSpeed * 1.5 * (dir[i] ? 1 : -1));
         else
@@ -150,6 +143,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     } else
       for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
         motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
+    /*
     tcaselect(COLOR[0]);
     uint16_t red, green, blue, c;
     color.getRawData(&red, &green, &blue, &c);
@@ -182,7 +176,6 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     }
     */
   }
-  /*
   uint16_t up = distance(VLX[Dir::N]) / 10;
   uint16_t down = distance(VLX[Dir::S]) / 10;
   if (dir[0] && up < 2 * DIST_THRESH2)
@@ -191,17 +184,16 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
   else if (!dir[0] && down < 2 * DIST_THRESH2)
     while (down > DIST_THRESH2)
       down = distance(VLX[Dir::S]) / 10;
-  */
   motorReset();
   if (alreadysilver)
     return Move::SILVER;
   return Move::SUCCESS;
 }
-bool forward(double a = 32, double motorSpeed = DEFAULT_MOTOR) {
+bool forward(double a = 35, double motorSpeed = DEFAULT_MOTOR) {
   static constexpr bool dir[]{ true, false };
   return move(dir, a, motorSpeed);
 }
-bool backward(double a = 32, double motorSpeed = DEFAULT_MOTOR) {
+bool backward(double a = 35, double motorSpeed = DEFAULT_MOTOR) {
   static constexpr bool dir[]{ false, true };
   return move(dir, a, motorSpeed);
 }
