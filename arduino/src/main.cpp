@@ -39,12 +39,12 @@ constexpr uint8_t BOS[]{ 5 };
 constexpr uint8_t COLOR[]{ 2 };
 constexpr uint8_t ENC = 18;
 constexpr uint8_t DIST_THRESH = 12;
-constexpr uint8_t DIST_THRESH2 = 12;
+constexpr uint8_t DIST_THRESH2 = 15;
 constexpr uint8_t LED = 12;
 constexpr uint8_t SERVOPIN = 9;
 constexpr double WHEEL_RAD = 3.6;
 constexpr uint16_t TICKS_PER_ROTATION = 368;
-constexpr double DEFAULT_MOTOR = 0.3;
+constexpr double DEFAULT_MOTOR = 0.5;
 volatile uint16_t encoder = 0;
 void encoderISR() {
   encoder++;
@@ -55,8 +55,8 @@ void tcaselect(uint16_t i) {
   Wire.endTransmission();
 }
 void motorReset() {
-  for (const auto motor : motors)
-    motor.stop();
+  motors[0].stop();
+  motors[1].stop();
   encoder = 0;
 }
 void resetFunc() {
@@ -105,16 +105,15 @@ int16_t orientation(uint8_t coord, uint16_t port = BOS[0]) {
 }
 uint8_t move(const bool dir[2], double a, double motorSpeed) {
   bool alreadysilver = false;
-  static constexpr uint16_t kp = 2;
+  static constexpr uint16_t kp = 1.3;
   double b = motorSpeed;
   motorSpeed *= 255;
   for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
     motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
   while (encoder < ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD))) {
-    /*
-    if (abs(orientation(Coord::Y, BOS[0])) > 15) {
-      while (abs(orientation(Coord::Y, BOS[0])) > 15) {
-        if (orientation(Coord::Y, BOS[0]) < -15)
+    if (abs(orientation(Coord::Y, BOS[0])) > 20) {
+      while (abs(orientation(Coord::Y, BOS[0])) > 20) {
+        if (orientation(Coord::Y, BOS[0]) < -20)
           for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
             motors[i].run(motorSpeed * 1.5 * (dir[i] ? 1 : -1));
         else
@@ -144,6 +143,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     } else
       for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
         motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
+    /*
     tcaselect(COLOR[0]);
     uint16_t red, green, blue, c;
     color.getRawData(&red, &green, &blue, &c);

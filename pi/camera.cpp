@@ -82,7 +82,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             if (n_kits || vic)
             {
                 cond_lock.lock();
-                //(*search)->set_current_vic();
+                (*search)->set_current_vic();
                 cond_lock.unlock();
                 if (n_kits == 3) std::cout << "Letter: H" << std::endl;
                 else if (n_kits == 2) std::cout << "Letter: S" << std::endl;

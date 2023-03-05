@@ -39,12 +39,12 @@ constexpr uint8_t BOS[]{ 5 };
 constexpr uint8_t COLOR[]{ 2 };
 constexpr uint8_t ENC = 18;
 constexpr uint8_t DIST_THRESH = 12;
-constexpr uint8_t DIST_THRESH2 = 12;
+constexpr uint8_t DIST_THRESH2 = 15;
 constexpr uint8_t LED = 12;
 constexpr uint8_t SERVOPIN = 9;
 constexpr double WHEEL_RAD = 3.6;
 constexpr uint16_t TICKS_PER_ROTATION = 368;
-constexpr double DEFAULT_MOTOR = 0.3;
+constexpr double DEFAULT_MOTOR = 0.5;
 volatile uint16_t encoder = 0;
 void encoderISR() {
   encoder++;
@@ -189,11 +189,11 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     return Move::SILVER;
   return Move::SUCCESS;
 }
-bool forward(double a = 35, double motorSpeed = DEFAULT_MOTOR) {
+bool forward(double a = 32, double motorSpeed = DEFAULT_MOTOR) {
   static constexpr bool dir[]{ true, false };
   return move(dir, a, motorSpeed);
 }
-bool backward(double a = 35, double motorSpeed = DEFAULT_MOTOR) {
+bool backward(double a = 32, double motorSpeed = DEFAULT_MOTOR) {
   static constexpr bool dir[]{ false, true };
   return move(dir, a, motorSpeed);
 }
