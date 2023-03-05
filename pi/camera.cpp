@@ -93,6 +93,9 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 serial.write(i);
                 */
             }
+            else{
+                std::cout << "empty!" << std::endl;
+            }
         }
     }
 }
