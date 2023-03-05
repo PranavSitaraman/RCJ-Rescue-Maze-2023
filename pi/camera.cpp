@@ -86,7 +86,8 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 cond_lock.unlock();
                 if (n_kits == 3) std::cout << "Letter: H" << std::endl;
                 else if (n_kits == 2) std::cout << "Letter: S" << std::endl;
-                else if (n_kits == 1) std::cout << "Color!" << std::endl;
+                else if (n_kits == 1) std::cout << "Red or Yellow" << std::endl;
+                else std::cout << "Green or U" << std::endl;
                 /*
                 serial.write(static_cast<std::uint8_t>(0));
                 serial.write(n_kits);
