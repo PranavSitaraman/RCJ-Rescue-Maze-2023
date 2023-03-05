@@ -55,8 +55,8 @@ void tcaselect(uint16_t i) {
   Wire.endTransmission();
 }
 void motorReset() {
-  for (const auto motor : motors)
-    motor.stop();
+  motors[0].stop();
+  motors[1].stop();
   encoder = 0;
 }
 void resetFunc() {
@@ -111,6 +111,12 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
   for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
     motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
   while (encoder < ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD))) {
+    uint16_t up = distance(VLX[Dir::N]) / 10;
+    uint16_t down = distance(VLX[Dir::S]) / 10;
+    if (dir[0] && up < DIST_THRESH2)
+      break;
+    if (!dir[0] && down < DIST_THRESH2)
+      break;
     /*
     if (abs(orientation(Coord::Y, BOS[0])) > 15) {
       while (abs(orientation(Coord::Y, BOS[0])) > 15) {
@@ -176,6 +182,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     }
     */
   }
+  /*
   uint16_t up = distance(VLX[Dir::N]) / 10;
   uint16_t down = distance(VLX[Dir::S]) / 10;
   if (dir[0] && up < 2 * DIST_THRESH2)
@@ -184,6 +191,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
   else if (!dir[0] && down < 2 * DIST_THRESH2)
     while (down > DIST_THRESH2)
       down = distance(VLX[Dir::S]) / 10;
+  */
   motorReset();
   if (alreadysilver)
     return Move::SILVER;
