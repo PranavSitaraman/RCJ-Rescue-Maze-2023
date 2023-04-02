@@ -225,7 +225,6 @@ void Search::check_walls()
     std::int32_t x_offset = 0, y_offset = 0;
     for (std::uint8_t i = 0; i < 4; i++)
     {
-        std::cout << i << std::endl;
 #ifndef VIRTUAL_TEST
         serial.write(i);
         std::uint16_t val = -1;
@@ -234,7 +233,7 @@ void Search::check_walls()
         std::uint16_t val = -1;
         std::cin >> val;
 #endif
-        std::cout << i << std::endl;
+        std::cout << int32_t(i) << std::endl;
         if (val <= 125)
             map[y][x][(i + cd + 4) % 4] = true;
     }
