@@ -89,9 +89,9 @@ restart:
         case Result::result::SUCCESS:
         {
             search->print_map();
-            print("before check walls");
+            std::cout << "before check walls" << std::endl;
             search->check_walls();
-            print("after check walls");
+            std::cout << "after check walls" << std::endl;
             search->print_map();
             break;
         }
