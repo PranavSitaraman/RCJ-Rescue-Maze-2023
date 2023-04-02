@@ -233,7 +233,6 @@ void Search::check_walls()
         std::uint16_t val = -1;
         std::cin >> val;
 #endif
-        std::cout << val << " ";
         if (val <= 125)
             map[y][x][(i + cd + 4) % 4] = true;
         std::cout << i << std::endl;
