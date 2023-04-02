@@ -105,12 +105,13 @@ int16_t orientation(uint8_t coord, uint16_t port = BOS[0]) {
 }
 uint8_t move(const bool dir[2], double a, double motorSpeed) {
   bool alreadysilver = false;
-  static constexpr uint16_t kp = 1.3;
+  static constexpr uint16_t kp = 0.3;
   double b = motorSpeed;
   motorSpeed *= 255;
   for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
     motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
   while (encoder < ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD))) {
+    /*
     if (abs(orientation(Coord::Y, BOS[0])) > 20) {
       while (abs(orientation(Coord::Y, BOS[0])) > 20) {
         if (orientation(Coord::Y, BOS[0]) < -20)
@@ -123,6 +124,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
       motorReset();
       return Move::RAMP;
     }
+    */
     uint16_t left = distance(VLX[Dir::W]) / 10;
     uint16_t right = distance(VLX[Dir::E]) / 10;
     uint16_t up = distance(VLX[Dir::N]) / 10;
@@ -176,6 +178,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     }
     */
   }
+  /*
   uint16_t up = distance(VLX[Dir::N]) / 10;
   uint16_t down = distance(VLX[Dir::S]) / 10;
   if (dir[0] && up < 2 * DIST_THRESH2)
@@ -184,6 +187,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
   else if (!dir[0] && down < 2 * DIST_THRESH2)
     while (down > DIST_THRESH2)
       down = distance(VLX[Dir::S]) / 10;
+  */
   motorReset();
   if (alreadysilver)
     return Move::SILVER;
