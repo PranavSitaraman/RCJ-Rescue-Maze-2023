@@ -225,7 +225,7 @@ void setup() {
   Wire.begin();
   for (auto port : BOS) {
     tcaselect(port);
-    bno.begin();
+    bno.begin(0x08);
   }
   for (auto port : VLX) {
     tcaselect(port);
