@@ -34,7 +34,7 @@ VL53L0X tof;
 Adafruit_TCS34725 color = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_614MS, TCS34725_GAIN_1X);
 Adafruit_BNO055 bno(55);
 Servo servo;
-constexpr uint8_t VLX[]{ 6, 0, 1, 7};
+constexpr uint8_t VLX[]{ 6, 7, 1, 0};
 constexpr uint8_t BOS[]{ 5 };
 constexpr uint8_t COLOR[]{ 2 };
 constexpr uint8_t ENC = 18;
@@ -44,7 +44,7 @@ constexpr uint8_t LED = 12;
 constexpr uint8_t SERVOPIN = 9;
 constexpr double WHEEL_RAD = 3.6;
 constexpr uint16_t TICKS_PER_ROTATION = 368;
-constexpr double DEFAULT_MOTOR = 0.5;
+constexpr double DEFAULT_MOTOR = 0.3;
 volatile uint16_t encoder = 0;
 void encoderISR() {
   encoder++;

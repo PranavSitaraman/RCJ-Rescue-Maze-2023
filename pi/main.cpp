@@ -89,7 +89,9 @@ restart:
         case Result::result::SUCCESS:
         {
             search->print_map();
+            print("before check walls");
             search->check_walls();
+            print("after check walls");
             search->print_map();
             break;
         }
