@@ -125,6 +125,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
       return Move::RAMP;
     }
     */
+    /*
     uint16_t left = distance(VLX[Dir::W]) / 10;
     uint16_t right = distance(VLX[Dir::E]) / 10;
     uint16_t up = distance(VLX[Dir::N]) / 10;
@@ -145,6 +146,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     } else
       for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
         motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
+    */
     /*
     tcaselect(COLOR[0]);
     uint16_t red, green, blue, c;
@@ -193,11 +195,11 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     return Move::SILVER;
   return Move::SUCCESS;
 }
-bool forward(double a = 32, double motorSpeed = DEFAULT_MOTOR) {
+bool forward(double a = 30, double motorSpeed = DEFAULT_MOTOR) {
   static constexpr bool dir[]{ true, false };
   return move(dir, a, motorSpeed);
 }
-bool backward(double a = 32, double motorSpeed = DEFAULT_MOTOR) {
+bool backward(double a = 30, double motorSpeed = DEFAULT_MOTOR) {
   static constexpr bool dir[]{ false, true };
   return move(dir, a, motorSpeed);
 }

@@ -34,7 +34,7 @@ VL53L0X tof;
 Adafruit_TCS34725 color = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_614MS, TCS34725_GAIN_1X);
 Adafruit_BNO055 bno(55);
 Servo servo;
-constexpr uint8_t VLX[]{ 6, 0, 1, 7};
+constexpr uint8_t VLX[]{ 6, 7, 1, 0};
 constexpr uint8_t BOS[]{ 5 };
 constexpr uint8_t COLOR[]{ 2 };
 constexpr uint8_t ENC = 18;
@@ -44,7 +44,7 @@ constexpr uint8_t LED = 12;
 constexpr uint8_t SERVOPIN = 9;
 constexpr double WHEEL_RAD = 3.6;
 constexpr uint16_t TICKS_PER_ROTATION = 368;
-constexpr double DEFAULT_MOTOR = 0.5;
+constexpr double DEFAULT_MOTOR = 0.3;
 volatile uint16_t encoder = 0;
 void encoderISR() {
   encoder++;
@@ -105,12 +105,13 @@ int16_t orientation(uint8_t coord, uint16_t port = BOS[0]) {
 }
 uint8_t move(const bool dir[2], double a, double motorSpeed) {
   bool alreadysilver = false;
-  static constexpr uint16_t kp = 1.3;
+  static constexpr uint16_t kp = 0.3;
   double b = motorSpeed;
   motorSpeed *= 255;
   for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
     motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
   while (encoder < ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD))) {
+    /*
     if (abs(orientation(Coord::Y, BOS[0])) > 20) {
       while (abs(orientation(Coord::Y, BOS[0])) > 20) {
         if (orientation(Coord::Y, BOS[0]) < -20)
@@ -123,6 +124,8 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
       motorReset();
       return Move::RAMP;
     }
+    */
+    /*
     uint16_t left = distance(VLX[Dir::W]) / 10;
     uint16_t right = distance(VLX[Dir::E]) / 10;
     uint16_t up = distance(VLX[Dir::N]) / 10;
@@ -143,6 +146,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     } else
       for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
         motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
+    */
     /*
     tcaselect(COLOR[0]);
     uint16_t red, green, blue, c;
@@ -176,6 +180,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     }
     */
   }
+  /*
   uint16_t up = distance(VLX[Dir::N]) / 10;
   uint16_t down = distance(VLX[Dir::S]) / 10;
   if (dir[0] && up < 2 * DIST_THRESH2)
@@ -184,16 +189,17 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
   else if (!dir[0] && down < 2 * DIST_THRESH2)
     while (down > DIST_THRESH2)
       down = distance(VLX[Dir::S]) / 10;
+  */
   motorReset();
   if (alreadysilver)
     return Move::SILVER;
   return Move::SUCCESS;
 }
-bool forward(double a = 32, double motorSpeed = DEFAULT_MOTOR) {
+bool forward(double a = 30, double motorSpeed = DEFAULT_MOTOR) {
   static constexpr bool dir[]{ true, false };
   return move(dir, a, motorSpeed);
 }
-bool backward(double a = 32, double motorSpeed = DEFAULT_MOTOR) {
+bool backward(double a = 30, double motorSpeed = DEFAULT_MOTOR) {
   static constexpr bool dir[]{ false, true };
   return move(dir, a, motorSpeed);
 }
@@ -221,7 +227,7 @@ void setup() {
   Wire.begin();
   for (auto port : BOS) {
     tcaselect(port);
-    bno.begin();
+    bno.begin(0x08);
   }
   for (auto port : VLX) {
     tcaselect(port);
