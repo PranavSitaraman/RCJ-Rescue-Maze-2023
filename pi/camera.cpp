@@ -44,10 +44,12 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
     cv::Mat frame;
     while (state != ThreadState::STOP)
     {
+        /*
         std::unique_lock<std::mutex> cond_lock(map_lock);
         map_cv.wait(cond_lock, [&search, &state]
                     { return !(*search)->get_current_vic() || state == ThreadState::STOP; });
         cond_lock.unlock();
+        */
         for (std::uint8_t i = 0; i < caps.size() && state != ThreadState::STOP; i++)
         {
             caps[i] >> frame;
@@ -83,9 +85,9 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             }
             if (n_kits || vic)
             {
-                cond_lock.lock();
-                (*search)->set_current_vic();
-                cond_lock.unlock();
+                // cond_lock.lock();
+                // (*search)->set_current_vic();
+                // cond_lock.unlock();
                 if (n_kits == 3) std::cout << "Letter: H" << std::endl;
                 else if (n_kits == 2) std::cout << "Letter: S" << std::endl;
                 else if (n_kits == 1) std::cout << "Red or Yellow" << std::endl;
