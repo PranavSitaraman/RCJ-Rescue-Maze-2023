@@ -125,7 +125,6 @@ Color::color color_detect(const cv::Mat &frame)
 }
 Letter::letter letter_detect(cv::Mat &frame)
 {
-    cv::rotate(frame, frame, cv::ROTATE_180);
     std::array<int, 3> letterCount{};
     cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
     cv::GaussianBlur(frame, frame, cv::Size(5, 5), 0);

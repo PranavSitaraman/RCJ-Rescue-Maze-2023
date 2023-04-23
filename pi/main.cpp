@@ -52,7 +52,7 @@ int main(int argc, char **argv)
     while (thread_state == ThreadState::INIT)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 #endif
-    return 0; //
+    while (true);
 restart:
     while (!(path = search->search()).empty())
     {
