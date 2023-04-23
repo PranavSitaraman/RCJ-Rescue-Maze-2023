@@ -105,7 +105,7 @@ int16_t orientation(uint8_t coord, uint16_t port = BOS[0]) {
 }
 uint8_t move(const bool dir[2], double a, double motorSpeed) {
   bool alreadysilver = false;
-  static constexpr float kp = 0.0005;
+  static constexpr float kp = 0.0004;
   double b = motorSpeed;
   motorSpeed *= 255;
   for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
