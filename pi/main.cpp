@@ -43,7 +43,6 @@ int main(int argc, char **argv)
 #endif
     Search *search = &searches[current];
 #ifndef VIRTUAL_TEST
-    detect(thread_state, &search, map_lock, map_cv);
     std::thread camera_thread(&detect, std::ref(thread_state), &search, std::ref(map_lock), std::ref(map_cv));
 #endif
     std::stack<std::uint8_t> path;
