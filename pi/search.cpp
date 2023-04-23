@@ -234,7 +234,7 @@ void Search::check_walls()
         std::cin >> val;
 #endif
         std::cout << int32_t(i) << std::endl;
-        if (val <= 125)
+        if (val <= 150)
             map[y][x][(i + cd + 4) % 4] = true;
     }
     new_length += (!map[y][x][Dir::E] && x == map.length() - 1);

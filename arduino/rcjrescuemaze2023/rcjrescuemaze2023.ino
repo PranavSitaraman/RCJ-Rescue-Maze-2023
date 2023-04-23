@@ -38,7 +38,7 @@ constexpr uint8_t VLX[]{ 6, 7, 1, 0};
 constexpr uint8_t BOS[]{ 5 };
 constexpr uint8_t COLOR[]{ 2 };
 constexpr uint8_t ENC = 18;
-constexpr uint8_t DIST_THRESH = 8;
+constexpr uint8_t DIST_THRESH = 7;
 constexpr uint8_t DIST_THRESH2 = 10;
 constexpr uint8_t LED = 12;
 constexpr uint8_t SERVOPIN = 9;
