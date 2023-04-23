@@ -158,7 +158,7 @@ Letter::letter letter_detect(cv::Mat &frame)
             continue;
         std::vector<std::vector<cv::Point>> letterContours;
         cv::findContours(letter, letterContours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-        if (letterCountours.empty()) continue;
+        if (letterContours.empty()) continue;
         std::vector<cv::Point> largestContour = letterContours[0];
         for (auto &c : letterContours)
             if (cv::contourArea(c) > cv::contourArea(largestContour))
