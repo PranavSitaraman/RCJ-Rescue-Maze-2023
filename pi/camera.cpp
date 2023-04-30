@@ -15,8 +15,8 @@
 #include "Serial.hpp"
 namespace fs = std::filesystem;
 constexpr auto CANNY_ON = false;
-constexpr auto SIZE_THRESH = 60;
-constexpr auto SLICE_SIZE_THRESH = 50;
+constexpr auto SIZE_THRESH = 50;
+constexpr auto SLICE_SIZE_THRESH = 10;
 constexpr auto CONT_SIZE_THRESH = 20000;
 void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lock, std::condition_variable &map_cv)
 {
@@ -33,7 +33,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
     }
     Serial serial(port, 9600);
     */
-    std::array<cv::VideoCapture, 2> caps{cv::VideoCapture(0, cv::CAP_V4L2), cv::VideoCapture(1, cv::CAP_V4L2)};
+    std::array<cv::VideoCapture, 1> caps{/*cv::VideoCapture(0, cv::CAP_V4L2),*/ cv::VideoCapture(1, cv::CAP_V4L2)};
     for (auto &cap : caps)
     {
         cap.set(cv::CAP_PROP_BUFFERSIZE, 1);
@@ -101,7 +101,9 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             else{
                 std::cout << "empty!" << std::endl;
             }
+            cv::imshow("fr", frame);
         }
+        cv::waitKey(0);
     }
 }
 Color::color color_detect(const cv::Mat &frame)
@@ -132,13 +134,15 @@ Letter::letter letter_detect(cv::Mat &frame)
     cv::GaussianBlur(frame, frame, cv::Size(5, 5), 0);
     if constexpr (CANNY_ON)
     {
-        cv::threshold(frame, frame, 0, 255, cv::THRESH_BINARY + cv::THRESH_OTSU);
+        //cv::threshold(frame, frame, 0, 255, cv::THRESH_BINARY + cv::THRESH_OTSU);
         cv::Canny(frame, frame, 50, 110);
     }
-    else
-        cv::adaptiveThreshold(frame, frame, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 11, 2);
+    else {
+        //cv::adaptiveThreshold(frame, frame, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 11, 2);
+        cv::threshold(frame, frame, 80, 255, cv::THRESH_BINARY_INV);
+    }
     std::vector<std::vector<cv::Point>> contours;
-    cv::findContours(frame, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+    cv::findContours(frame, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
     cv::drawContours(frame, contours, -1, cv::Scalar(255, 255, 255), -1);
     for (const auto &contour : contours)
     {
@@ -155,7 +159,7 @@ Letter::letter letter_detect(cv::Mat &frame)
         if (area <= 0)
             continue;
         std::vector<std::vector<cv::Point>> letterContours;
-        cv::findContours(letter, letterContours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+        cv::findContours(letter, letterContours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
         if (letterContours.empty()) continue;
         std::vector<cv::Point> largestContour = letterContours[0];
         for (auto &c : letterContours)
@@ -164,9 +168,13 @@ Letter::letter letter_detect(cv::Mat &frame)
         letter = letter(cv::boundingRect(largestContour));
         if (letter.cols > letter.rows)
             cv::rotate(letter, letter, cv::ROTATE_90_CLOCKWISE);
+        cv::imshow("img", letter);
         auto sliceSize = letter.rows / 3;
         std::array<cv::Mat, 3> slices{letter(cv::Rect(0, 0, letter.cols, sliceSize)), letter(cv::Rect(0, sliceSize, letter.cols, sliceSize)), letter(cv::Rect(0, 2 * sliceSize, letter.cols, sliceSize))};
         std::array<int, 3> sliceContours{};
+        cv::imshow("sl0", slices[0]);
+        cv::imshow("sl1", slices[1]);
+        cv::imshow("sl2", slices[2]);
         constexpr std::array<int, 3> h{2, 1, 2};
         constexpr std::array<int, 3> s{1, 1, 1};
         constexpr std::array<int, 3> u{2, 2, 1};
