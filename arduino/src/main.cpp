@@ -38,7 +38,7 @@ constexpr uint8_t VLX[]{ 6, 7, 1, 0};
 constexpr uint8_t BOS[]{ 5 };
 constexpr uint8_t COLOR[]{ 2 };
 constexpr uint8_t ENC = 18;
-constexpr uint8_t DIST_THRESH = 8;
+constexpr uint8_t DIST_THRESH = 7;
 constexpr uint8_t DIST_THRESH2 = 10;
 constexpr uint8_t LED = 12;
 constexpr uint8_t SERVOPIN = 9;
@@ -105,7 +105,7 @@ int16_t orientation(uint8_t coord, uint16_t port = BOS[0]) {
 }
 uint8_t move(const bool dir[2], double a, double motorSpeed) {
   bool alreadysilver = false;
-  static constexpr float kp = 0.0005;
+  static constexpr float kp = 0.0004;
   double b = motorSpeed;
   motorSpeed *= 255;
   for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)

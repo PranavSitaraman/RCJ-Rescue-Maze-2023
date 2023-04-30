@@ -14,7 +14,6 @@
 #include "search.hpp"
 #include "Serial.hpp"
 namespace fs = std::filesystem;
-constexpr auto CANNY_ON = false;
 constexpr auto SIZE_THRESH = 50;
 constexpr auto SLICE_SIZE_THRESH = 10;
 constexpr auto CONT_SIZE_THRESH = 20000;
@@ -55,6 +54,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             caps[i] >> frame;
             std::uint8_t n_kits = 0;
             bool vic = false;
+            /*
             switch (color_detect(frame))
             {
             case Color::RED:
@@ -69,6 +69,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             case Color::UNKNOWN:
                 break;
             }
+            */
             switch (letter_detect(frame))
             {
             case Letter::H:
@@ -83,23 +84,20 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             case Letter::UNKNOWN:
                 break;
             }
-            if (n_kits || vic)
+            // if (n_kits || vic)
             {
                 // cond_lock.lock();
                 // (*search)->set_current_vic();
                 // cond_lock.unlock();
                 if (n_kits == 3) std::cout << "Letter: H" << std::endl;
                 else if (n_kits == 2) std::cout << "Letter: S" << std::endl;
-                else if (n_kits == 1) std::cout << "Red or Yellow" << std::endl;
-                else std::cout << "Green or U" << std::endl;
+                else if (n_kits == 1) std::cout << "Letter: U" << std::endl;
+                else std::cout << "Letter: unknown" << std::endl;
                 /*
                 serial.write(static_cast<std::uint8_t>(0));
                 serial.write(n_kits);
                 serial.write(i);
                 */
-            }
-            else{
-                std::cout << "empty!" << std::endl;
             }
             cv::imshow("fr", frame);
         }
@@ -132,15 +130,7 @@ Letter::letter letter_detect(cv::Mat &frame)
     std::array<int, 3> letterCount{};
     cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
     cv::GaussianBlur(frame, frame, cv::Size(5, 5), 0);
-    if constexpr (CANNY_ON)
-    {
-        //cv::threshold(frame, frame, 0, 255, cv::THRESH_BINARY + cv::THRESH_OTSU);
-        cv::Canny(frame, frame, 50, 110);
-    }
-    else {
-        //cv::adaptiveThreshold(frame, frame, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 11, 2);
-        cv::threshold(frame, frame, 80, 255, cv::THRESH_BINARY_INV);
-    }
+    cv::threshold(frame, frame, 80, 255, cv::THRESH_BINARY_INV);
     std::vector<std::vector<cv::Point>> contours;
     cv::findContours(frame, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
     cv::drawContours(frame, contours, -1, cv::Scalar(255, 255, 255), -1);
