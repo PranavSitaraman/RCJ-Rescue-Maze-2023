@@ -32,7 +32,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
     }
     Serial serial(port, 9600);
     */
-    std::array<cv::VideoCapture, 1> caps{/*cv::VideoCapture(0, cv::CAP_V4L2),*/ cv::VideoCapture(1, cv::CAP_V4L2)};
+    std::array<cv::VideoCapture, 2> caps{cv::VideoCapture(0, cv::CAP_V4L2), cv::VideoCapture(1, cv::CAP_V4L2)};
     for (auto &cap : caps)
     {
         cap.set(cv::CAP_PROP_BUFFERSIZE, 1);
