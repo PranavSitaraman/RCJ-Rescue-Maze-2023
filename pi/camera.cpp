@@ -99,7 +99,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 serial.write(i);
                 */
             }
-            cv::imshow("fr", frame);
+            //cv::imshow("fr", frame);
         }
         cv::waitKey(0);
     }
@@ -158,13 +158,13 @@ Letter::letter letter_detect(cv::Mat &frame)
         letter = letter(cv::boundingRect(largestContour));
         if (letter.cols > letter.rows)
             cv::rotate(letter, letter, cv::ROTATE_90_CLOCKWISE);
-        cv::imshow("img", letter);
+        //cv::imshow("img", letter);
         auto sliceSize = letter.rows / 3;
         std::array<cv::Mat, 3> slices{letter(cv::Rect(0, 0, letter.cols, sliceSize)), letter(cv::Rect(0, sliceSize, letter.cols, sliceSize)), letter(cv::Rect(0, 2 * sliceSize, letter.cols, sliceSize))};
         std::array<int, 3> sliceContours{};
-        cv::imshow("sl0", slices[0]);
-        cv::imshow("sl1", slices[1]);
-        cv::imshow("sl2", slices[2]);
+        //cv::imshow("sl0", slices[0]);
+        //cv::imshow("sl1", slices[1]);
+        //cv::imshow("sl2", slices[2]);
         constexpr std::array<int, 3> h{2, 1, 2};
         constexpr std::array<int, 3> s{1, 1, 1};
         constexpr std::array<int, 3> u{2, 2, 1};
