@@ -30,11 +30,6 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
         }
     }
     Serial serial(port, 9600);
-    while (!serial.available());
-    while (serial.available())
-    {
-        std::cout << serial.read() << std::endl;
-    }
     std::array<cv::VideoCapture, 2> caps{cv::VideoCapture(0, cv::CAP_V4L2), cv::VideoCapture(1, cv::CAP_V4L2)};
     for (auto &cap : caps)
     {

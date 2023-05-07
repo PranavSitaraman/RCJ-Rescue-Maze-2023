@@ -282,7 +282,6 @@ void setup() {
   dirServo.write(90);
   // pinMode(LED, OUTPUT);
   motorReset();
-  Serial.write((uint8_t)3);
   while (Serial2.available()) {
     Serial2.read();
     delay(100);
