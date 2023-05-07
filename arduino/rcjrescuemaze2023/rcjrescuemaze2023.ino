@@ -3,6 +3,7 @@
 #include <MeMegaPi.h>
 #include <Adafruit_TCS34725.h>
 #include <VL53L0X.h>
+#include <Stepper.h>
 #include <Wire.h>
 #include <avr/wdt.h>
 namespace Dir {
@@ -33,7 +34,7 @@ MeMegaPiDCMotor motors[2] = { MeMegaPiDCMotor(PORT1B), MeMegaPiDCMotor(PORT2B) }
 VL53L0X tof;
 Adafruit_TCS34725 color = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_614MS, TCS34725_GAIN_1X);
 Adafruit_BNO055 bno(55);
-Servo servo;
+Servo dirServo;
 constexpr uint8_t VLX[]{ 6, 7, 1, 0};
 constexpr uint8_t BOS[]{ 5 };
 constexpr uint8_t COLOR[]{ 2 };
@@ -46,6 +47,10 @@ constexpr double WHEEL_RAD = 3.6;
 constexpr uint16_t TICKS_PER_ROTATION = 368;
 constexpr double DEFAULT_MOTOR = 0.4;
 volatile uint16_t encoder = 0;
+const int stepsPerRevolution = 2070;
+Stepper dropper(stepsPerRevolution, 22, 24, 26, 28);
+int stepCount = 0;
+int numDrops = 0;
 void encoderISR() {
   encoder++;
 }
@@ -65,35 +70,58 @@ void resetFunc() {
   while (true)
     ;
 }
-void drop(int side) {
-  if (side == 0) {
-    servo.write(120);
-    delay(1000);
-    servo.write(45);
-    delay(1000);
-    servo.write(60);
-  } else {
-    servo.write(0);
-    delay(1000);
-    servo.write(75);
-    delay(1000);
-    servo.write(60);
-  }
+void nextSlot()
+{
+  dropper.setSpeed(5);
+  if (numDrops == 0)
+    dropper.step(85);
+  else
+    dropper.step(170);
+  numDrops++;
+  delay(100);
 }
-void handleVictim() {
-  uint8_t val = Serial1.read();
-  uint8_t side = Serial1.read();
+void dropR()
+{
+  dirServo.write(135);
+  nextSlot();
+  dirServo.write(90);
+  delay(400);
+  dirServo.write(180);
+  delay(400);
+  dirServo.write(90);
+  delay(500);
+}
+void dropL()
+{
+  dirServo.write(45);
+  nextSlot();
+  dirServo.write(90);
+  delay(400);
+  dirServo.write(0);
+  delay(400);
+  dirServo.write(90);
+  delay(500);
+}
+void handleVictim()
+{
+  uint8_t val = Serial.read();
+  uint8_t side = Serial.read();
   digitalWrite(LED, HIGH);
   delay(5000);
   digitalWrite(LED, LOW);
   for (uint8_t i = 0; i < val; i++)
-    drop(side);
+  {
+    if (side == 0) dropR();
+    if (side == 1) dropL();
+  }
 }
-uint16_t distance(uint16_t port = VLX[0]) {
+uint16_t distance(uint16_t port = VLX[0])
+{
   tcaselect(port);
   return tof.readRangeSingleMillimeters();
 }
-int16_t orientation(uint8_t coord, uint16_t port = BOS[0]) {
+int16_t orientation(uint8_t coord, uint16_t port = BOS[0])
+{
   tcaselect(port);
   sensors_event_t event;
   bno.getEvent(&event);
@@ -167,8 +195,9 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     }
     if (red > SILVER_LOWER_R && green > SILVER_LOWER_G && blue > SILVER_LOWER_B && !alreadysilver)
       alreadysilver = true;
-    if (Serial1.available()) {
-      Serial1.read();
+    */
+    if (Serial.available()) {
+      Serial.read();
       for (const auto motor : motors)
         motor.stop();
       handleVictim();
@@ -176,7 +205,6 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
         motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
       break;
     }
-    */
   }
   uint16_t up = distance(VLX[Dir::N]) / 10;
   uint16_t down = distance(VLX[Dir::S]) / 10;
@@ -234,7 +262,6 @@ void right(double a = 85, double motorSpeed = DEFAULT_MOTOR, uint16_t port = BOS
 }
 void setup() {
   Serial.begin(9600);
-  Serial.println("begin setup");
   Serial2.begin(9600);
   Wire.begin();
   for (auto port : BOS) {
@@ -250,23 +277,21 @@ void setup() {
     tcaselect(port);
     color.begin();
   }
-  // Serial1.begin(9600);
   attachInterrupt(digitalPinToInterrupt(ENC), &encoderISR, RISING);
-  // servo.attach(SERVOPIN);
-  // servo.write(60);
+  dirServo.attach(A6);
+  dirServo.write(90);
   // pinMode(LED, OUTPUT);
   motorReset();
+  Serial.write((uint8_t)3);
   while (Serial2.available()) {
     Serial2.read();
     delay(100);
   }
-  Serial.println("end setup");
   Serial2.write((uint8_t)1);
 }
 void loop() {
   if (Serial2.available()) {
     uint8_t command = Serial2.read();
-    Serial.println(command);
     if (command >> 7) {
       command &= ~(1 << 7);
       uint8_t state;
@@ -292,7 +317,6 @@ void loop() {
       Serial2.write(state);
     } else {
       uint16_t val = distance(VLX[command]);
-      Serial.println(val);
       Serial2.write((uint8_t *)&val, sizeof(val));
     }
   }

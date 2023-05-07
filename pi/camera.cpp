@@ -19,19 +19,22 @@ constexpr auto SLICE_SIZE_THRESH = 10;
 constexpr auto CONT_SIZE_THRESH = 20000;
 void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lock, std::condition_variable &map_cv)
 {
-    /*
     std::string port;
     for (const auto &entry : fs::directory_iterator("/sys/class/tty"))
     {
         const auto &filename = entry.path().filename();
-        if (filename.generic_string().rfind("ttyS0", 0) == 0)
+        if (filename.generic_string().rfind("ttyUSB0", 0) == 0)
         {
             port = "/dev/" / filename;
             break;
         }
     }
     Serial serial(port, 9600);
-    */
+    while (!serial.available());
+    while (serial.available())
+    {
+        std::cout << serial.read() << std::endl;
+    }
     std::array<cv::VideoCapture, 2> caps{cv::VideoCapture(0, cv::CAP_V4L2), cv::VideoCapture(1, cv::CAP_V4L2)};
     for (auto &cap : caps)
     {
@@ -43,18 +46,15 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
     cv::Mat frame;
     while (state != ThreadState::STOP)
     {
-        /*
         std::unique_lock<std::mutex> cond_lock(map_lock);
         map_cv.wait(cond_lock, [&search, &state]
                     { return !(*search)->get_current_vic() || state == ThreadState::STOP; });
         cond_lock.unlock();
-        */
         for (std::uint8_t i = 0; i < caps.size() && state != ThreadState::STOP; i++)
         {
             caps[i] >> frame;
             std::uint8_t n_kits = 0;
             bool vic = false;
-            /*
             switch (color_detect(frame))
             {
             case Color::RED:
@@ -69,7 +69,6 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             case Color::UNKNOWN:
                 break;
             }
-            */
             switch (letter_detect(frame))
             {
             case Letter::H:
@@ -84,20 +83,14 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             case Letter::UNKNOWN:
                 break;
             }
-            // if (n_kits || vic)
+            if (n_kits || vic)
             {
-                // cond_lock.lock();
-                // (*search)->set_current_vic();
-                // cond_lock.unlock();
-                if (n_kits == 3) std::cout << "Letter: H" << std::endl;
-                else if (n_kits == 2) std::cout << "Letter: S" << std::endl;
-                else if (n_kits == 1) std::cout << "Letter: U" << std::endl;
-                else std::cout << "Letter: unknown" << std::endl;
-                /*
+                cond_lock.lock();
+                (*search)->set_current_vic();
+                cond_lock.unlock();
                 serial.write(static_cast<std::uint8_t>(0));
                 serial.write(n_kits);
                 serial.write(i);
-                */
             }
             //cv::imshow("fr", frame);
         }
