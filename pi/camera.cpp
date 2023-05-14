@@ -6,6 +6,7 @@
 #include <chrono>
 #include <filesystem>
 #include <numeric>
+#include <thread>
 #include <fstream>
 #include <opencv2/videoio.hpp>
 #include <opencv2/imgproc.hpp>
@@ -45,7 +46,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
         map_cv.wait(cond_lock, [&search, &state]
                     { return !(*search)->get_current_vic() || state == ThreadState::STOP; });
         cond_lock.unlock();
-        sleep(3);
+        std::this_thread::sleep_for(std::chrono::seconds(3));
         for (std::uint8_t i = 0; i < caps.size() && state != ThreadState::STOP; i++)
         {
             caps[i] >> frame;
