@@ -15,7 +15,7 @@
 #include "search.hpp"
 #include "Serial.hpp"
 namespace fs = std::filesystem;
-constexpr auto SIZE_THRESH = 50;
+constexpr auto SIZE_THRESH = 40;
 constexpr auto SLICE_SIZE_THRESH = 10;
 constexpr auto CONT_SIZE_THRESH = 20000;
 void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lock, std::condition_variable &map_cv)
@@ -135,7 +135,7 @@ Letter::letter letter_detect(cv::Mat &frame)
     std::array<int, 3> letterCount{};
     cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
     cv::GaussianBlur(frame, frame, cv::Size(5, 5), 0);
-    cv::adaptiveThreshold(frame, frame, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 11, 2);
+    cv::adaptiveThreshold(frame, frame, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 20, 2);
     std::vector<std::vector<cv::Point>> contours;
     cv::findContours(frame, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
     cv::drawContours(frame, contours, -1, cv::Scalar(255, 255, 255), -1);
