@@ -102,7 +102,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             */
             cv::imshow("fr", frame);
         }
-        if (cv::waitKey(50) & 0xFF == ord('q')) break;
+        if (cv::waitKey(50) & 0xFF == 'q') break;
     }
 }
 Color::color color_detect(const cv::Mat &frame)
