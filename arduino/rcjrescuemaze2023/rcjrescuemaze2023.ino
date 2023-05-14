@@ -261,7 +261,6 @@ void right(double a = 85, double motorSpeed = DEFAULT_MOTOR, uint16_t port = BOS
   turn(dir, a, motorSpeed * 255, port);
 }
 void setup() {
-  forward();
   Serial.begin(9600);
   Serial2.begin(9600);
   Wire.begin();
