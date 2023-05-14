@@ -134,7 +134,9 @@ Letter::letter letter_detect(cv::Mat &frame)
 {
     std::array<int, 3> letterCount{};
     cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
-    cv::GaussianBlur(frame, frame, cv::Size(5, 5), 0);
+    cv::convertScaleAbs(frame, frame, 1.5, 4);
+    cv::medianBlur(frame, frame, 3);
+    cv::GaussianBlur(frame, frame, cv::Size(7, 7), 0);
     cv::adaptiveThreshold(frame, frame, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 21, 2);
     std::vector<std::vector<cv::Point>> contours;
     cv::findContours(frame, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
