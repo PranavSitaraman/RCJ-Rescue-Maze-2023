@@ -100,7 +100,11 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 serial.write(i);
             }
             */
-            cv::imshow("fr", frame);
+           if (i == 0)
+            cv::imshow("fr0", frame);
+        else
+                    cv::imshow("fr1", frame);
+
         }
         if (cv::waitKey(50) & 0xFF == 'q') break;
     }
@@ -131,7 +135,7 @@ Letter::letter letter_detect(cv::Mat &frame)
     std::array<int, 3> letterCount{};
     cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
     cv::GaussianBlur(frame, frame, cv::Size(5, 5), 0);
-    cv::threshold(frame, frame, 100, 255, cv::THRESH_BINARY_INV);
+    cv::adaptiveThreshold(frame, frame, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 11, 2);
     std::vector<std::vector<cv::Point>> contours;
     cv::findContours(frame, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
     cv::drawContours(frame, contours, -1, cv::Scalar(255, 255, 255), -1);
