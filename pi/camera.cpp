@@ -36,7 +36,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
     {
         cap.set(cv::CAP_PROP_BUFFERSIZE, 1);
         cap.set(cv::CAP_PROP_FRAME_WIDTH, 320);
-        cap.set(cv::CAP_PROP_FRAME_HEIGHT, 320);
+        cap.set(cv::CAP_PROP_FRAME_HEIGHT, 240);
     }
     state = ThreadState::STARTED;
     cv::Mat frame;
