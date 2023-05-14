@@ -70,6 +70,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 std::cout << "unknown color" << std::endl;
                 break;
             }
+            std::cout << "between" << std::endl;
             switch (letter_detect(frame))
             {
             case Letter::H:
