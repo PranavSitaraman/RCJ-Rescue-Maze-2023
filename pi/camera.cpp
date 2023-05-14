@@ -40,13 +40,13 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
     }
     state = ThreadState::STARTED;
     cv::Mat frame;
+    std::this_thread::sleep_for(std::chrono::seconds(3));
     while (state != ThreadState::STOP)
     {
         std::unique_lock<std::mutex> cond_lock(map_lock);
         map_cv.wait(cond_lock, [&search, &state]
                     { return !(*search)->get_current_vic() || state == ThreadState::STOP; });
         cond_lock.unlock();
-        //std::this_thread::sleep_for(std::chrono::seconds(3));
         for (std::uint8_t i = 0; i < caps.size() && state != ThreadState::STOP; i++)
         {
             caps[i] >> frame;
