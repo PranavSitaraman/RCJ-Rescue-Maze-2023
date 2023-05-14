@@ -138,8 +138,9 @@ Letter::letter letter_detect(cv::Mat &frame)
     //cv::convertScaleAbs(frame, frame, 1.5, 4);
     cv::medianBlur(frame, frame, 1);
     cv::GaussianBlur(frame, frame, cv::Size(5, 5), 0);
-    cv::adaptiveThreshold(frame, frame, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 11, 3);
-    std::vector<std::vector<cv::Point>> contours;
+cv::threshold(frame, frame, 0, 255, cv::THRESH_BINARY + cv::THRESH_OTSU);
+		cv::Canny(frame, frame, 50, 110);
+        std::vector<std::vector<cv::Point>> contours;
     cv::findContours(frame, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
     cv::drawContours(frame, contours, -1, cv::Scalar(255, 255, 255), -1);
     
