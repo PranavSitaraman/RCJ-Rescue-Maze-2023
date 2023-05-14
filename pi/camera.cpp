@@ -100,9 +100,9 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 serial.write(i);
             }
             */
-            //cv::imshow("fr", frame);
+            cv::imshow("fr", frame);
         }
-        //cv::waitKey(0);
+        cv::waitKey(0);
     }
 }
 Color::color color_detect(const cv::Mat &frame)

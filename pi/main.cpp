@@ -51,6 +51,7 @@ int main(int argc, char **argv)
     search->check_walls();
     search->print_map();
 #ifndef VIRTUAL_TEST
+    while (true);
     while (thread_state == ThreadState::INIT)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 #endif
