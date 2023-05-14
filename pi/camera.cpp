@@ -50,8 +50,10 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
         for (std::uint8_t i = 0; i < caps.size() && state != ThreadState::STOP; i++)
         {
             caps[i] >> frame;
+            /*
             if (i == 0) cv::imshow("froriginal0", frame);
             else cv::imshow("froriginal1", frame);
+            */
             std::uint8_t n_kits = 0;
             bool vic = false;
             switch (color_detect(frame))
@@ -102,10 +104,10 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 serial.write(i);
             }
             */
-           if (i == 0)
-            cv::imshow("fr0", frame);
-        else
-                    cv::imshow("fr1", frame);
+            /*
+            if (i == 0) cv::imshow("fr0", frame);
+            else cv::imshow("fr1", frame);
+            */
 
         }
         if (cv::waitKey(50) & 0xFF == 'q') break;
@@ -136,13 +138,11 @@ Letter::letter letter_detect(cv::Mat &frame)
 {
     std::array<int, 3> letterCount{};
     cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
-    //cv::convertScaleAbs(frame, frame, 1.5, 4);
     cv::GaussianBlur(frame, frame, cv::Size(5, 5), 0);
     cv::threshold(frame, frame, 80, 255, cv::THRESH_BINARY_INV);
     std::vector<std::vector<cv::Point>> contours;
     cv::findContours(frame, contours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
     cv::drawContours(frame, contours, -1, cv::Scalar(255, 255, 255), -1);
-    
     for (const auto &contour : contours)
     {
         auto rect = cv::boundingRect(contour);
@@ -167,13 +167,13 @@ Letter::letter letter_detect(cv::Mat &frame)
         letter = letter(cv::boundingRect(largestContour));
         if (letter.cols > letter.rows)
             cv::rotate(letter, letter, cv::ROTATE_90_CLOCKWISE);
-        cv::imshow("img", letter);
+        // cv::imshow("img", letter);
         auto sliceSize = letter.rows / 3;
         std::array<cv::Mat, 3> slices{letter(cv::Rect(0, 0, letter.cols, sliceSize)), letter(cv::Rect(0, sliceSize, letter.cols, sliceSize)), letter(cv::Rect(0, 2 * sliceSize, letter.cols, sliceSize))};
         std::array<int, 3> sliceContours{};
-        cv::imshow("sl0", slices[0]);
-        cv::imshow("sl1", slices[1]);
-        cv::imshow("sl2", slices[2]);
+        // cv::imshow("sl0", slices[0]);
+        // cv::imshow("sl1", slices[1]);
+        // cv::imshow("sl2", slices[2]);
         constexpr std::array<int, 3> h{2, 1, 2};
         constexpr std::array<int, 3> s{1, 1, 1};
         constexpr std::array<int, 3> u{2, 2, 1};

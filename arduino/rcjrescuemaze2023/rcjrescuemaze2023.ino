@@ -133,12 +133,14 @@ int16_t orientation(uint8_t coord, uint16_t port = BOS[0])
 }
 uint8_t move(const bool dir[2], double a, double motorSpeed) {
   bool alreadysilver = false;
-  static constexpr float kp = 0.0004;
+  static constexpr float kp = 0.0001;
+  static constexpr float kp2 = 0.001;
   double b = motorSpeed;
   motorSpeed *= 255;
   for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
     motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
   while (encoder < ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD))) {
+  
     /*
     if (abs(orientation(Coord::Y, BOS[0])) > 20) {
       while (abs(orientation(Coord::Y, BOS[0])) > 20) {
@@ -161,7 +163,12 @@ uint8_t move(const bool dir[2], double a, double motorSpeed) {
     {
       break;
     }
-    if (left <= 2 * DIST_THRESH && right <= 2 * DIST_THRESH) {
+    if (abs(left - right) < DIST_THRESH)
+    {
+      for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
+        motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
+    }
+    else if (left <= 2 * DIST_THRESH && right <= 2 * DIST_THRESH) {
       motors[0].run(constrain(motorSpeed + kp * (left - right), 0, 255) * (dir[0] ? 1 : -1));
       motors[1].run(constrain(motorSpeed + kp * (right - left), 0, 255) * (dir[1] ? 1 : -1));
     } else if (left <= 2 * DIST_THRESH && right > 2 * DIST_THRESH) {
