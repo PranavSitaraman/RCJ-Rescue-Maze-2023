@@ -50,6 +50,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
         for (std::uint8_t i = 0; i < caps.size() && state != ThreadState::STOP; i++)
         {
             caps[i] >> frame;
+            cv::imshow("froriginal", frame);
             std::uint8_t n_kits = 0;
             bool vic = false;
             switch (color_detect(frame))
@@ -135,7 +136,7 @@ Letter::letter letter_detect(cv::Mat &frame)
     std::array<int, 3> letterCount{};
     cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
     //cv::convertScaleAbs(frame, frame, 1.5, 4);
-    cv::medianBlur(frame, frame, 3);
+    cv::medianBlur(frame, frame, 1);
     cv::GaussianBlur(frame, frame, cv::Size(5, 5), 0);
     cv::adaptiveThreshold(frame, frame, 255, cv::ADAPTIVE_THRESH_GAUSSIAN_C, cv::THRESH_BINARY_INV, 11, 3);
     std::vector<std::vector<cv::Point>> contours;
