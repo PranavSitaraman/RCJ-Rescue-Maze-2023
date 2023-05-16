@@ -33,6 +33,8 @@ filesystem
 -
 numeric
 -
+thread
+-
 fstream
 -
 opencv2/videoio.hpp

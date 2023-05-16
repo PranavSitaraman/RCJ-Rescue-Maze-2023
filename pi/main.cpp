@@ -45,6 +45,7 @@ int main(int argc, char **argv)
     std::cout << "prev" << std::endl;
 #ifndef VIRTUAL_TEST
     std::thread camera_thread(&detect, std::ref(thread_state), &search, std::ref(map_lock), std::ref(map_cv));
+    while(1);
 #endif
     std::cout << "after" << std::endl;
     std::stack<std::uint8_t> path;
