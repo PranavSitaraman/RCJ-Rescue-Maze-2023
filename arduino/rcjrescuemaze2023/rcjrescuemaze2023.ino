@@ -39,13 +39,13 @@ constexpr uint8_t VLX[]{ 6, 7, 1, 0};
 constexpr uint8_t BOS[]{ 5 };
 constexpr uint8_t COLOR[]{ 2 };
 constexpr uint8_t ENC = 18;
-constexpr uint8_t DIST_THRESH = 7;
+constexpr uint8_t DIST_THRESH = 10;
 constexpr uint8_t DIST_THRESH2 = 10;
 constexpr uint8_t LED = 12;
 constexpr uint8_t SERVOPIN = 9;
 constexpr double WHEEL_RAD = 3.6;
 constexpr uint16_t TICKS_PER_ROTATION = 368;
-constexpr double DEFAULT_MOTOR = 0.4;
+constexpr double DEFAULT_MOTOR = 0.7;
 volatile uint16_t encoder = 0;
 const int stepsPerRevolution = 2070;
 Stepper dropper(stepsPerRevolution, 22, 24, 26, 28);
@@ -133,8 +133,7 @@ int16_t orientation(uint8_t coord, uint16_t port = BOS[0])
 }
 uint8_t move(const bool dir[2], double a, double motorSpeed) {
   bool alreadysilver = false;
-  static constexpr float kp = 0.0001;
-  static constexpr float kp2 = 0.001;
+  static constexpr float kp = 0.0005;
   double b = motorSpeed;
   motorSpeed *= 255;
   for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
