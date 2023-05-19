@@ -50,50 +50,36 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
         for (std::uint8_t i = 0; i < caps.size() && state != ThreadState::STOP; i++)
         {
             caps[i] >> frame;
-            
-            //if (i == 0) cv::imshow("froriginal0", frame);
-            //else cv::imshow("froriginal1", frame);
-            
             std::uint8_t n_kits = 0;
             bool vic = false;
             switch (color_detect(frame))
             {
             case Color::RED:
                 n_kits = 1;
-                std::cout << "red" << std::endl;
                 break;
             case Color::YELLOW:
                 n_kits = 1;
-                std::cout << "yellow" << std::endl;
                 break;
             case Color::GREEN:
                 vic = true;
-                std::cout << "green" << std::endl;
                 break;
             case Color::UNKNOWN:
-                std::cout << "unknown color" << std::endl;
                 break;
             }
-            //std::cout << "between" << std::endl;
             switch (letter_detect(frame))
             {
             case Letter::H:
                 n_kits = 3;
-                std::cout << "H" << std::endl;
                 break;
             case Letter::S:
                 n_kits = 2;
-                std::cout << "S" << std::endl;
                 break;
             case Letter::U:
                 vic = true;
-                std::cout << "U" << std::endl;
                 break;
             case Letter::UNKNOWN:
-                std::cout << "unknown letter" << std::endl;
                 break;
             }
-            /*
             if (n_kits || vic)
             {
                 cond_lock.lock();
@@ -103,33 +89,23 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 serial.write(n_kits);
                 serial.write(i);
             }
-            */
-            /*
-            if (i == 0) cv::imshow("fr0", frame);
-            else cv::imshow("fr1", frame);
-            */
-
         }
-        if (cv::waitKey(50) & 0xFF == 'q') break;
+        if (cv::waitKey(50) & 0xFF == 'q')
+            break;
     }
 }
 Color::color color_detect(const cv::Mat &frame)
 {
-    // bounds to determine r y or b
     static const std::array<cv::Scalar, 6> bounds{cv::Scalar(100, 100, 0), cv::Scalar(200, 255, 255), cv::Scalar(0, 100, 0), cv::Scalar(30, 255, 255), cv::Scalar(30, 100, 0), cv::Scalar(100, 255, 255)};
     auto color_ratio = 1 / 20.;
     auto color = Color::UNKNOWN;
     cv::cvtColor(frame, frame, cv::COLOR_BGR2HSV);
-    cv::imshow("fr", frame);
     cv::Mat filt_frame;
     for (std::uint8_t i = 0; i < bounds.size() && color == Color::UNKNOWN; i += 2)
     {
-        // in range to isolate a specific spectrum of colors and set them to white
         cv::inRange(frame, bounds[i], bounds[i + 1], filt_frame);
-        cv::imshow("filter " + std::to_string(i), filt_frame);
         auto nonzero = cv::countNonZero(filt_frame);
         auto size = filt_frame.cols * filt_frame.rows;
-        // check if the number of pixels that are white are enough to be a color
         if (double cur_ratio; (cur_ratio = nonzero / static_cast<double>(size)) > color_ratio)
         {
             color = static_cast<Color::color>(i / 2);
@@ -144,7 +120,6 @@ Letter::letter letter_detect(cv::Mat &frame)
     std::array<int, 3> letterCount{};
     cv::cvtColor(frame, frame, cv::COLOR_BGR2GRAY);
     cv::GaussianBlur(frame, frame, cv::Size(5, 5), 0);
-    // using canny to find countours
     cv::Mat cannot;
     cv::Canny(frame, cannot, 100, 150);
     std::vector<std::vector<cv::Point>> contours;
@@ -153,44 +128,33 @@ Letter::letter letter_detect(cv::Mat &frame)
     for (const auto &contour : contours)
     {
         id++;
-        // get min area rect
         auto minRect = cv::minAreaRect(contour);
         auto rw = minRect.size.width;
         auto rh = minRect.size.height;
         auto angle = minRect.angle;
-        // make sure its dimensions are correct
         if (rw < SIZE_THRESH || rh < SIZE_THRESH)
             continue;
-        if (rw/rh > 2 || rh/rw > 2)
+        if (rw / rh > 2 || rh / rw > 2)
             continue;
-        //std::cout << rw << ' '<< rh << ' ' << angle << std::endl;
-        // isolate the bounding rectangle from the image and invert it (so the letter becomes white)
         cv::Mat letter = 255 - frame(cv::boundingRect(contour)).clone();
-        // mxsz is the max number of cols or rows (this is to ensure no clipping happens when rotating)
         int mxsz = std::max(letter.cols, letter.rows);
-        // rotate
         auto mat = cv::getRotationMatrix2D(cv::Point(mxsz / 2, mxsz / 2), angle, 1);
         cv::warpAffine(letter, letter, mat, cv::Size(mxsz, mxsz), cv::INTER_CUBIC);
-        // not sure what this does tbh
         auto area = cv::contourArea(contour);
         if (area <= 0)
             continue;
         std::vector<std::vector<cv::Point>> letterContours;
-        // threshold so all white becomes pure white and vice versa
         cv::threshold(letter, letter, 200, 255, cv::THRESH_BINARY);
-        // find biggest contour (eliminates the padding when rotating)
         cv::findContours(letter, letterContours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-        if (letterContours.empty()) continue;
+        if (letterContours.empty())
+            continue;
         std::vector<cv::Point> largestContour = letterContours[0];
         for (auto &c : letterContours)
             if (cv::contourArea(c) > cv::contourArea(largestContour))
-                largestContour = c; 
+                largestContour = c;
         letter = letter(cv::boundingRect(largestContour));
-        // sideways check
         if (letter.cols > letter.rows)
-            cv::rotate(letter, letter, cv::ROTATE_90_CLOCKWISE); 
-        //cv::imshow("img " + std::to_string(id), letter);
-        // create the three slices
+            cv::rotate(letter, letter, cv::ROTATE_90_CLOCKWISE);
         auto sliceSize = letter.rows / 3;
         std::array<cv::Mat, 3> slices{letter(cv::Rect(0, 0, letter.cols, sliceSize)), letter(cv::Rect(0, sliceSize, letter.cols, sliceSize)), letter(cv::Rect(0, 2 * sliceSize, letter.cols, sliceSize))};
         std::array<int, 3> sliceContours{};
@@ -200,9 +164,7 @@ Letter::letter letter_detect(cv::Mat &frame)
         constexpr std::array<int, 3> u_rot{1, 2, 2};
         for (int i = 0; i < slices.size(); i++)
         {
-            // find the contours for each slice
             cv::findContours(slices[i], letterContours, cv::RETR_TREE, cv::CHAIN_APPROX_SIMPLE);
-            // count the number of valid contours
             int count = 0;
             for (auto &sliceContour : letterContours)
             {
@@ -213,11 +175,6 @@ Letter::letter letter_detect(cv::Mat &frame)
             }
             sliceContours[i] = count;
         }
-        //cv::imshow("sl0", slices[0]);
-        //cv::imshow("sl1", slices[1]);
-        //cv::imshow("sl2", slices[2]);
-        //std::cout << sliceContours[0] << " " << sliceContours[1] << " " << sliceContours[2] << std::endl;
-        // check if the contour count array matches H, S, or U
         if (sliceContours == h)
             letterCount[Letter::H]++;
         else if (sliceContours == s)
@@ -225,10 +182,6 @@ Letter::letter letter_detect(cv::Mat &frame)
         else if (sliceContours == u || sliceContours == u_rot)
             letterCount[Letter::U]++;
     }
-    // for debugging purposes
-    cv::drawContours(frame, contours, -1, cv::Scalar(255, 255, 255), -1);
-    //cv::imshow("fr", frame);
-    // find the maximum occurence count of the letters and pick that
     auto max = std::max_element(letterCount.begin(), letterCount.end());
     if (*max == 0)
         return Letter::UNKNOWN;

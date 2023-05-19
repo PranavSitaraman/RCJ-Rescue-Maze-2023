@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     }
     Serial serial(port, 9600);
     while (serial.available())
-      serial.read();
+        serial.read();
     std::array<Search, 2> searches{(!std::filesystem::exists("/home/pi/map1")) ? Search(serial, map_lock, map_cv, "/home/pi/map1") : Search(serial, "/home/pi/map1", map_lock, map_cv), (!std::filesystem::exists("/home/pi/map2")) ? Search(serial, map_lock, map_cv, "/home/pi/map2") : Search(serial, "/home/pi/map2", map_lock, map_cv)};
     if (std::filesystem::exists("/home/pi/num"))
     {
@@ -45,7 +45,8 @@ int main(int argc, char **argv)
     std::cout << "prev" << std::endl;
 #ifndef VIRTUAL_TEST
     std::thread camera_thread(&detect, std::ref(thread_state), &search, std::ref(map_lock), std::ref(map_cv));
-    while(1);
+    while (1)
+        ;
 #endif
     std::cout << "after" << std::endl;
     std::stack<std::uint8_t> path;
@@ -68,7 +69,6 @@ restart:
         }
         case Result::result::RAMP:
         {
-            /*
             std::uint8_t oldcd = search->cd;
             current = !current;
             map_lock.lock();
@@ -77,16 +77,13 @@ restart:
             if (oldcd == 2 && current == 0)
                 search->cd = (search->cd + 2) % 4;
             map_lock.unlock();
-            */
         }
         case Result::result::SILVER:
         {
-            /*
             search = &searches[!current];
             search->dump_map();
             search = &searches[current];
             search->dump_map();
-            */
         }
         case Result::result::SUCCESS:
         {

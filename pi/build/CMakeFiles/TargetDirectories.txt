@@ -1,3 +1,0 @@
-/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles/rebuild_cache.dir
-/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles/maze-2023.dir
-/home/pi/RCJ-Rescue-Maze-2023/pi/build/CMakeFiles/edit_cache.dir
