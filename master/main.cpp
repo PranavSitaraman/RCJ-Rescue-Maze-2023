@@ -4,21 +4,20 @@
 #include <filesystem>
 #include <csignal>
 #include <unistd.h>
-#include <gpiod.hpp>
+#include <wiringPi.h>
 using namespace std::chrono_literals;
 int main()
 {
 	std::error_code err;
 	std::filesystem::remove("/home/pi/map1", err);
 	std::filesystem::remove("/home/pi/map2", err);
-	constexpr auto BUTTON_PIN = 16;
-	gpiod::chip chip("/dev/gpiochip0");
-	auto line = chip.get_line(BUTTON_PIN);
-	line.request({"master", gpiod::line_request::DIRECTION_INPUT, 0});
+	constexpr auto BUTTON_PIN = 23;
+	wiringPiSetup();
+	pinMode(BUTTON_PIN, INPUT);
 	pid_t pid = 0;
-	for (;;)
+	while (true)
 	{
-		if (!line.get_value())
+		if (digitalRead(BUTTON_PIN) == 0)
 		{
 			if (pid)
 			{
