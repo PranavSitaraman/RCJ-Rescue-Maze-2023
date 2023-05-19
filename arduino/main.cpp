@@ -297,6 +297,10 @@ void setup()
   Serial.begin(9600);
   Serial2.begin(9600);
   Wire.begin();
+  pinMode(LED, OUTPUT);
+  digitalWrite(LED, HIGH);
+  delay(1000);
+  digitalWrite(LED, LOW);
   for (auto port : BOS)
   {
     tcaselect(port);
@@ -316,7 +320,6 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(ENC), &encoderISR, RISING);
   dirServo.attach(A6);
   dirServo.write(90);
-  // pinMode(LED, OUTPUT);
   motorReset();
   while (Serial2.available())
   {
