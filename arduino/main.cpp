@@ -47,7 +47,7 @@ constexpr uint8_t COLOR[]{2, 3};
 constexpr uint8_t ENC = 18;
 constexpr uint8_t DIST_THRESH = 10;
 constexpr uint8_t DIST_THRESH2 = 10;
-constexpr uint8_t LED = 12;
+constexpr uint8_t LED = 39;
 constexpr uint8_t SERVOPIN = 9;
 constexpr double WHEEL_RAD = 3.6;
 constexpr uint16_t TICKS_PER_ROTATION = 368;
