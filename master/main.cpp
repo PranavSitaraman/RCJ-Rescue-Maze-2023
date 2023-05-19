@@ -11,7 +11,7 @@ int main()
 	std::error_code err;
 	std::filesystem::remove("/home/pi/map1", err);
 	std::filesystem::remove("/home/pi/map2", err);
-	constexpr auto BUTTON_PIN = 23;
+	constexpr auto BUTTON_PIN = 4;
 	wiringPiSetup();
 	pinMode(BUTTON_PIN, INPUT);
 	pid_t pid = 0;
