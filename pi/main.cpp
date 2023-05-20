@@ -43,6 +43,7 @@ int main(int argc, char **argv)
     Search *search = &searches[current];
     std::stack<std::uint8_t> path;
     constexpr std::uint8_t RESET = Dir::W+1;
+    while (serial.available()) serial.read();
     serial.write((std::uint8_t)((1 << 7)|RESET));
 	serial.read();
 #ifndef VIRTUAL_TEST
