@@ -228,10 +228,11 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
       colors = tiles(COLOR[0]);
     else
       colors = tiles(COLOR[1]);
-    if (colors.R < 500 && colors.G < 500 && colors.B < 500)
+    if (colors.R < 300 && colors.G < 300 && colors.B < 300)
     {
       uint16_t reverse = encoder;
-      motorReset();
+      for (const auto motor : motors)
+        motor.stop();
       for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
         motors[i].run(motorSpeed * (dir[i] ? -1 : 1));
       while (encoder < reverse)
@@ -254,8 +255,6 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
       for (const auto motor : motors)
         motor.stop();
       handleVictim();
-      for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
-        motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
     }
   }
   /*

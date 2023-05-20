@@ -94,7 +94,6 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 cond_lock.unlock();
                 serial.write(static_cast<std::uint8_t>(0));
                 serial.write(n_kits);
-                serial.write(3);
                 serial.write(i);
             }
         }
