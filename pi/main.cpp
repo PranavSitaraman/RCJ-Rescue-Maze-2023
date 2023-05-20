@@ -48,11 +48,13 @@ int main(int argc, char **argv)
     while (thread_state == ThreadState::INIT)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 #endif
-    serial.write((uint8_t)1);
-    while (!serial.available());
-    while (serial.available()) serial.read();
-    while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - epoch).count() < 15000);
-    std::cout << "pi done" << std::endl;
+    while (true)
+    {
+        if (serial.available())
+        {
+            if (serial.read() == (uint8_t)1) break;
+        }
+    }
     search->check_walls();
     search->print_map();
 restart:

@@ -346,10 +346,9 @@ void setup()
   dirServo.attach(A6);
   dirServo.write(90);
   motorReset();
-  Serial2.write((uint8_t)1);
-  while (!Serial2.available());
+  while (Serial.available()) Serial.read();
   while (Serial2.available()) Serial2.read();
-  while (millis() < 15000);
+  Serial2.write((uint8_t)1);
 }
 void loop()
 {
