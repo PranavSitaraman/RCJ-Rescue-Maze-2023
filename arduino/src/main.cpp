@@ -348,7 +348,7 @@ void setup()
   motorReset();
   while (Serial.available()) Serial.read();
   while (Serial2.available()) Serial2.read();
-  Serial2.write((uint8_t)1);
+  while (millis() < 10000);
 }
 void loop()
 {
@@ -374,9 +374,6 @@ void loop()
       case Dir::W:
         left();
         state = forward();
-        break;
-      case RESET:
-        resetFunc();
         break;
       }
       Serial2.write(state);

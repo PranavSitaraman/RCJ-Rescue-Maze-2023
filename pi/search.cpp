@@ -42,11 +42,6 @@ void istream_readv(std::istream &is, T &val, Args &...args)
 Search::Search(Serial &ser, std::mutex &lock, std::condition_variable &cv, const char *path) : map(1, 1, 50), init_x(0), init_y(0), x(0), y(0), cd(Dir::N), serial(ser), map_lock(lock), map_cv(cv), filename(path)
 {
     constexpr std::uint8_t RESET = Dir::W + 1;
-#ifndef VIRTUAL_TEST
-    serial.write((std::uint8_t)((1 << 7) | RESET));
-    while (!serial.available());
-    while (serial.available()) serial.read();
-#endif
 }
 Search::Search(Serial &ser, const char *path, std::mutex &lock, std::condition_variable &cv) : cd(Dir::N), serial(ser), map_lock(lock), map_cv(cv), filename(path)
 {
@@ -57,11 +52,6 @@ Search::Search(Serial &ser, const char *path, std::mutex &lock, std::condition_v
     in.read(reinterpret_cast<char *>(data), width * length * sizeof(*data));
     map = std::move(Matrix(width, length, data));
     constexpr std::uint8_t RESET = Dir::W + 1;
-#ifndef VIRTUAL_TEST
-    serial.write((std::uint8_t)((1 << 7) | RESET));
-    while (serial.available() == 0);
-    serial.read();
-#endif
 }
 std::stack<std::uint8_t> Search::search() const
 {
