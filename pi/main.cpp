@@ -52,7 +52,9 @@ int main(int argc, char **argv)
     {
         if (serial.available())
         {
-            if (serial.read() == (uint8_t)1) break;
+            uint8_t a = serial.read();
+            std::cout << a << std::endl;
+            if (a == 1) break;
         }
     }
     std::cout << "pi done" << std::endl;
