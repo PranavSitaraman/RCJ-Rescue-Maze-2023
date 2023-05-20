@@ -42,13 +42,11 @@ int main(int argc, char **argv)
     }
 #endif
     Search *search = &searches[current];
-    std::cout << "prev" << std::endl;
 #ifndef VIRTUAL_TEST
     std::thread camera_thread(&detect, std::ref(thread_state), &search, std::ref(map_lock), std::ref(map_cv));
     while (1)
         ;
 #endif
-    std::cout << "after" << std::endl;
     std::stack<std::uint8_t> path;
     search->check_walls();
     search->print_map();
@@ -88,9 +86,7 @@ restart:
         case Result::result::SUCCESS:
         {
             search->print_map();
-            std::cout << "before check walls" << std::endl;
             search->check_walls();
-            std::cout << "after check walls" << std::endl;
             search->print_map();
             break;
         }
