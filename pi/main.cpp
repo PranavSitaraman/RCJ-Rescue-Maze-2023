@@ -42,14 +42,14 @@ int main(int argc, char **argv)
 #endif
     Search *search = &searches[current];
     std::stack<std::uint8_t> path;
+    constexpr std::uint8_t RESET = Dir::W+1;
+    serial.write((std::uint8_t)((1 << 7)|RESET));
+	serial.read();
 #ifndef VIRTUAL_TEST
     std::thread camera_thread(&detect, std::ref(thread_state), &search, std::ref(map_lock), std::ref(map_cv));
     while (thread_state == ThreadState::INIT)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 #endif
-	constexpr std::uint8_t RESET = Dir::W+1;
-    serial.write((std::uint8_t)((1 << 7)|RESET));
-	serial.read();
     search->check_walls();
     search->print_map();
 restart:
