@@ -9,7 +9,6 @@
 #include <filesystem>
 int main(int argc, char **argv)
 {
-    auto epoch = std::chrono::high_resolution_clock::from_time_t(0);
     std::cout << "start" << std::endl;
 #ifndef VIRTUAL_TEST
     std::atomic<ThreadState> thread_state = ThreadState::INIT;
@@ -48,6 +47,7 @@ int main(int argc, char **argv)
     while (thread_state == ThreadState::INIT)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 #endif
+    std::cout << "pi before" << std::endl;
     while (true)
     {
         if (serial.available())
