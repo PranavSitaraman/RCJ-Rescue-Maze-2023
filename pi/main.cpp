@@ -53,7 +53,7 @@ int main(int argc, char **argv)
         if (serial.available())
         {
             uint8_t a = serial.read();
-            std::cout << a << std::endl;
+            std::cout << (uint32_t) a << std::endl;
             if (a == 1) break;
         }
     }
