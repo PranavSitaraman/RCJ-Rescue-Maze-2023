@@ -346,8 +346,6 @@ void setup()
   dirServo.attach(A6);
   dirServo.write(90);
   motorReset();
-  while (Serial.available()) Serial.read();
-  while (Serial2.available()) Serial2.read();
   Serial2.write((uint8_t)1);
 }
 void loop()

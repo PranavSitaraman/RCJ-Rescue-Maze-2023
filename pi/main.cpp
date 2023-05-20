@@ -48,15 +48,7 @@ int main(int argc, char **argv)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 #endif
     std::cout << "pi before" << std::endl;
-    while (true)
-    {
-        if (serial.available())
-        {
-            uint8_t a = serial.read();
-            std::cout << (uint32_t) a << std::endl;
-            if (a == 1) break;
-        }
-    }
+    while (serial.available()) serial.read();
     std::cout << "pi done" << std::endl;
     search->check_walls();
     search->print_map();
