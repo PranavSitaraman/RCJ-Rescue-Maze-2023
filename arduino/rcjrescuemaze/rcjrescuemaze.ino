@@ -223,13 +223,12 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
     else
       for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
         motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
-    /*
     Color colors;
     if (dir[0])
       colors = tiles(COLOR[0]);
     else
       colors = tiles(COLOR[1]);
-    if (colors.R < 1000 && colors.G < 1000 && colors.B < 1000)
+    if (colors.R < 2000 && colors.G < 2000 && colors.B < 2000)
     {
       uint16_t reverse = encoder;
       motorReset();
@@ -249,7 +248,6 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
     }
     else if (colors.R > 10000 && colors.G > 10000 && colors.B > 10000 && !alreadysilver)
       alreadysilver = true;
-    */
     if (Serial.available())
     {
       Serial.read();
