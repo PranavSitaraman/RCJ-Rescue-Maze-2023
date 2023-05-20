@@ -49,7 +49,7 @@ int main(int argc, char **argv)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 #endif
     while (serial.available()) serial.read();
-    while (duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - epoch).count() > 10000);
+    while (std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - epoch).count() > 10000);
     search->check_walls();
     search->print_map();
 restart:
