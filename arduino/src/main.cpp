@@ -256,9 +256,9 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
       handleVictim();
       for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
         motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
-      break;
     }
   }
+  /*
   uint16_t up = distance(VLX[Dir::N]) / 10;
   uint16_t down = distance(VLX[Dir::S]) / 10;
   if (dir[0] && up < 2 * DIST_THRESH2)
@@ -281,6 +281,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
     while (down < DIST_THRESH2 / 2)
       down = distance(VLX[Dir::S]) / 10;
   }
+  */
   motorReset();
   if (alreadysilver)
     return Move::SILVER;
