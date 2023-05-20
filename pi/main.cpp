@@ -47,6 +47,7 @@ int main(int argc, char **argv)
     while (thread_state == ThreadState::INIT)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 #endif
+	constexpr std::uint8_t RESET = Dir::W+1;
     serial.write((std::uint8_t)((1 << 7)|RESET));
 	serial.read();
     search->check_walls();
