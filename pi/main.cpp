@@ -55,6 +55,7 @@ int main(int argc, char **argv)
             if (serial.read() == (uint8_t)1) break;
         }
     }
+    std::cout << "pi done" << std::endl;
     search->check_walls();
     search->print_map();
 restart:
