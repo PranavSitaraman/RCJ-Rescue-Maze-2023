@@ -373,6 +373,8 @@ void loop()
         left();
         state = forward();
         break;
+      case RESET:
+        resetFunc();
       }
       Serial2.write(state);
     }
