@@ -1,7 +1,7 @@
 #include <Adafruit_BNO055.h>
 #include <Arduino.h>
 #include <MeMegaPi.h>
-#include <Adafruit_TCS34725.h>
+#include <Adafruit_AS726x.h>
 #include <VL53L0X.h>
 #include <Stepper.h>
 #include <Wire.h>
@@ -25,6 +25,12 @@ namespace Coord
     Z
   };
 }
+struct Color
+{
+  float R;
+  float G;
+  float B;
+};
 namespace Move
 {
   enum : uint8_t
@@ -38,7 +44,7 @@ namespace Move
 constexpr auto RESET = Dir::W + 1;
 MeMegaPiDCMotor motors[2] = {MeMegaPiDCMotor(PORT1B), MeMegaPiDCMotor(PORT2B)};
 VL53L0X tof;
-Adafruit_TCS34725 color = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_614MS, TCS34725_GAIN_1X);
+Adafruit_AS726x color;
 Adafruit_BNO055 bno(55);
 Servo dirServo;
 constexpr uint8_t VLX[]{6, 7, 1, 0};
@@ -132,6 +138,22 @@ uint16_t distance(uint16_t port = VLX[0])
   tcaselect(port);
   return tof.readRangeSingleMillimeters();
 }
+Color tiles(uint16_t port = COLOR[0])
+{
+  float sensorValues[AS726x_NUM_CHANNELS];
+  tcaselect(port);
+  color.startMeasurement();
+  bool rdy = false;
+  while (!rdy)
+  {
+    delay(5);
+    rdy = color.dataReady();
+  }
+  color.drvOn();
+  color.readCalibratedValues(sensorValues);
+  Color colors = {sensorValues[AS726x_RED], sensorValues[AS726x_GREEN], sensorValues[AS726x_BLUE]};
+  return colors;
+}
 int16_t orientation(uint8_t coord, uint16_t port = BOS[0])
 {
   tcaselect(port);
@@ -146,6 +168,7 @@ int16_t orientation(uint8_t coord, uint16_t port = BOS[0])
 uint8_t move(const bool dir[2], double a, double motorSpeed)
 {
   bool alreadysilver = false;
+  bool alreadyblue = false;
   static constexpr float kp = 0.0005;
   double b = motorSpeed;
   motorSpeed *= 255;
@@ -198,19 +221,18 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
     else
       for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
         motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
+    Color colors;
     if (dir[0])
-      tcaselect(COLOR[0]);
+      colors = tiles(COLOR[0]);
     else
-      tcaselect(COLOR[1]);
-    uint16_t red, green, blue, c;
-    color.getRawData(&red, &green, &blue, &c);
+      colors = tiles(COLOR[1]);
     const uint16_t BLACK_UPPER_R = 5;
     const uint16_t BLACK_UPPER_G = 5;
     const uint16_t BLACK_UPPER_B = 5;
     const uint16_t SILVER_LOWER_R = 10;
     const uint16_t SILVER_LOWER_G = 40;
     const uint16_t SILVER_LOWER_B = 30;
-    if (red < BLACK_UPPER_R && green < BLACK_UPPER_G && blue < BLACK_UPPER_B)
+    if (colors.R < 1000 && colors.G < 1000 && colors.B < 1000)
     {
       uint16_t reverse = encoder;
       motorReset();
@@ -221,7 +243,13 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
       motorReset();
       return Move::BLACK;
     }
-    if (red > SILVER_LOWER_R && green > SILVER_LOWER_G && blue > SILVER_LOWER_B && !alreadysilver)
+    else if (colors.R < 2000 && colors.G < 2000 && colors.B > 4 * colors.R && !alreadyblue)
+    {
+      motorReset();
+      delay(5000);
+      alreadyblue = true;
+    }
+    else if (colors.R > 10000 && colors.G > 10000 && colors.B > 10000 && !alreadysilver)
       alreadysilver = true;
     if (Serial.available())
     {
@@ -321,6 +349,11 @@ void setup()
   dirServo.attach(A6);
   dirServo.write(90);
   motorReset();
+  while (Serial.available())
+  {
+    Serial.read();
+    delay(100);
+  }
   while (Serial2.available())
   {
     Serial2.read();
