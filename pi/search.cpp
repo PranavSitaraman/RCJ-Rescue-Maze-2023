@@ -207,6 +207,7 @@ void Search::check_walls()
     std::lock_guard<std::mutex> guard(map_lock);
     std::uint32_t new_width = map.width(), new_length = map.length();
     std::int32_t x_offset = 0, y_offset = 0;
+    std::cout << "Check walls" << std::endl;
     for (std::uint8_t i = 0; i < 4; i++)
     {
 #ifndef VIRTUAL_TEST
