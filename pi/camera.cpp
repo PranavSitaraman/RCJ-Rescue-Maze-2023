@@ -40,7 +40,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
     }
     state = ThreadState::STARTED;
     cv::Mat frame;
-    std::this_thread::sleep_for(std::chrono::seconds(3));
+    //std::this_thread::sleep_for(std::chrono::seconds(3));
     while (state != ThreadState::STOP)
     {
         std::unique_lock<std::mutex> cond_lock(map_lock);
