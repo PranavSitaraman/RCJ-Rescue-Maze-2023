@@ -57,7 +57,7 @@ constexpr uint8_t LED = 39;
 constexpr uint8_t SERVOPIN = 9;
 constexpr double WHEEL_RAD = 3.6;
 constexpr uint16_t TICKS_PER_ROTATION = 368;
-constexpr double DEFAULT_MOTOR = 0.7;
+constexpr double DEFAULT_MOTOR = 0.3;
 volatile uint16_t encoder = 0;
 const int stepsPerRevolution = 2070;
 Stepper dropper(stepsPerRevolution, 22, 24, 26, 28);
@@ -226,12 +226,6 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
       colors = tiles(COLOR[0]);
     else
       colors = tiles(COLOR[1]);
-    const uint16_t BLACK_UPPER_R = 5;
-    const uint16_t BLACK_UPPER_G = 5;
-    const uint16_t BLACK_UPPER_B = 5;
-    const uint16_t SILVER_LOWER_R = 10;
-    const uint16_t SILVER_LOWER_G = 40;
-    const uint16_t SILVER_LOWER_B = 30;
     if (colors.R < 1000 && colors.G < 1000 && colors.B < 1000)
     {
       uint16_t reverse = encoder;

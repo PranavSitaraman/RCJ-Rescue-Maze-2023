@@ -9,6 +9,7 @@
 #include <filesystem>
 int main(int argc, char **argv)
 {
+    std::cout << "start" << std::endl;
 #ifndef VIRTUAL_TEST
     std::atomic<ThreadState> thread_state = ThreadState::INIT;
 #endif
@@ -60,11 +61,13 @@ restart:
         {
         case Result::result::BLACK:
         {
+            std::cout << "black" << std::endl;
             search->print_map();
             break;
         }
         case Result::result::RAMP:
         {
+            std::cout << "ramp" << std::endl;
             std::uint8_t oldcd = search->cd;
             current = !current;
             map_lock.lock();
@@ -76,6 +79,7 @@ restart:
         }
         case Result::result::SILVER:
         {
+            std::cout << "silver" << std::endl;
             search = &searches[!current];
             search->dump_map();
             search = &searches[current];
@@ -83,6 +87,7 @@ restart:
         }
         case Result::result::SUCCESS:
         {
+            std::cout << "success" << std::endl;
             search->print_map();
             search->check_walls();
             search->print_map();
