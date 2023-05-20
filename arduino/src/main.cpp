@@ -351,11 +351,6 @@ void setup()
     Serial.read();
     delay(100);
   }
-  while (Serial2.available())
-  {
-    Serial2.read();
-    delay(100);
-  }
   Serial2.write((uint8_t)1);
 }
 void loop()
