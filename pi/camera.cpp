@@ -80,7 +80,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             case Letter::UNKNOWN:
                 break;
             }
-            if (n_kits || vic)
+            //if (n_kits || vic)
             {
                 std::cout << "detect" << std::endl;
                 cond_lock.lock();
