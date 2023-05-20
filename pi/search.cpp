@@ -213,6 +213,7 @@ void Search::check_walls()
         serial.write(i);
         std::uint16_t val = -1;
         serial.read(val);
+        std::cout << (uint32_t)i << std::endl;
 #else
         std::uint16_t val = -1;
         std::cin >> val;
