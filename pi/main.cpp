@@ -25,8 +25,6 @@ int main(int argc, char **argv)
             port = "/dev/" / filename;
     }
     Serial serial(port, 9600);
-    while (serial.available())
-        serial.read();
     std::array<Search, 2> searches{(!std::filesystem::exists("/home/pi/map1")) ? Search(serial, map_lock, map_cv, "/home/pi/map1") : Search(serial, "/home/pi/map1", map_lock, map_cv), (!std::filesystem::exists("/home/pi/map2")) ? Search(serial, map_lock, map_cv, "/home/pi/map2") : Search(serial, "/home/pi/map2", map_lock, map_cv)};
     if (std::filesystem::exists("/home/pi/num"))
     {
