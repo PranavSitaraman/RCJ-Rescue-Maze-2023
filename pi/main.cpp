@@ -50,6 +50,7 @@ int main(int argc, char **argv)
     while (thread_state == ThreadState::INIT)
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
 #endif
+    std::cout << "done" << std::endl;
     search->check_walls();
     search->print_map();
 restart:
