@@ -147,8 +147,6 @@ uint8_t Search::move(std::stack<std::uint8_t> &path)
         std::cout << "Move status: ";
         std::cin >> c;
 #else
-        std::cout << std::endl;
-        std::cout << dir << std::endl;
         serial.write((std::uint8_t)(dir | (1 << 7)));
         unsigned char c = serial.read();
 #endif
@@ -233,7 +231,6 @@ void Search::check_walls()
         std::uint16_t val = -1;
         std::cin >> val;
 #endif
-        std::cout << int32_t(i) << std::endl;
         if (val <= 150)
             map[y][x][(i + cd + 4) % 4] = true;
     }
