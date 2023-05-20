@@ -23,7 +23,6 @@ int main()
 			{
 				kill(pid, SIGKILL);
 				pid = 0;
-				std::cout << "kill" << std::endl;
 				std::this_thread::sleep_for(2s);
 				continue;
 			}

@@ -9,7 +9,6 @@
 #include <filesystem>
 int main(int argc, char **argv)
 {
-    std::cout << "start" << std::endl;
 #ifndef VIRTUAL_TEST
     std::atomic<ThreadState> thread_state = ThreadState::INIT;
 #endif
