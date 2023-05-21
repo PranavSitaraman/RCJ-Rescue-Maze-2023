@@ -172,9 +172,9 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
     motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
   while (encoder < ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD)))
   {
-    while (abs(orientation(Coord::Y, BOS[0])) > 10)
+    while (abs(orientation(Coord::Y, BOS[0])) > 15)
     {
-      if (orientation(Coord::Y, BOS[0]) < -10)
+      if (orientation(Coord::Y, BOS[0]) < -15)
         for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
           motors[i].run(motorSpeed * 1.5 * (dir[i] ? 1 : -1));
       else
