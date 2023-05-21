@@ -51,25 +51,23 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             caps[i] >> frame;
             std::uint8_t n_kits = 0;
             bool vic = false;
-            /*
             switch (color_detect(frame))
             {
             case Color::RED:
                 n_kits = 1;
-            //    std::cout << "red" << std::endl;
+                std::cout << "red" << std::endl;
                 break;
             case Color::YELLOW:
                 n_kits = 1;
-            //     std::cout << "yellow" << std::endl;
+                 std::cout << "yellow" << std::endl;
                 break;
             case Color::GREEN:
                 vic = true;
-            //    std::cout << "green" << std::endl;
+                std::cout << "green" << std::endl;
                 break;
             case Color::UNKNOWN:
                 break;
             }
-            */
             switch (letter_detect(frame))
             {
             case Letter::H:
@@ -87,6 +85,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             case Letter::UNKNOWN:
                 break;
             }
+            /*
             if (n_kits || vic)
             {
                 std::cout << "detect" << std::endl;
@@ -97,6 +96,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 serial.write(n_kits);
                 serial.write(i);
             }
+            */
         }
         if (cv::waitKey(5) & 0xFF == 'q')
             break;
@@ -104,7 +104,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
 }
 Color::color color_detect(const cv::Mat &frame)
 {
-    static const std::array<cv::Scalar, 6> bounds{cv::Scalar(100, 100, 0), cv::Scalar(200, 255, 255), cv::Scalar(0, 100, 0), cv::Scalar(30, 255, 255), cv::Scalar(30, 100, 0), cv::Scalar(100, 255, 255)};
+    static const std::array<cv::Scalar, 6> bounds{cv::Scalar(100, 100, 0), cv::Scalar(200, 255, 200), cv::Scalar(0, 100, 0), cv::Scalar(30, 255, 200), cv::Scalar(30, 100, 0), cv::Scalar(100, 255, 200)};
     auto color_ratio = 1 / 20.;
     auto color = Color::UNKNOWN;
     cv::cvtColor(frame, frame, cv::COLOR_BGR2HSV);
@@ -112,12 +112,18 @@ Color::color color_detect(const cv::Mat &frame)
     for (std::uint8_t i = 0; i < bounds.size() && color == Color::UNKNOWN; i += 2)
     {
         cv::inRange(frame, bounds[i], bounds[i + 1], filt_frame);
-        auto nonzero = cv::countNonZero(filt_frame);
+        // auto nonzero = cv::countNonZero(filt_frame);
         auto size = filt_frame.cols * filt_frame.rows;
-        if (double cur_ratio; (cur_ratio = nonzero / static_cast<double>(size)) > color_ratio)
-        {
-            color = static_cast<Color::color>(i / 2);
-            color_ratio = cur_ratio;
+        // if (double cur_ratio; (cur_ratio = nonzero / static_cast<double>(size)) > color_ratio)
+        // {
+        //     color = static_cast<Color::color>(i / 2);
+        //     color_ratio = cur_ratio;
+        // }
+        std::vector<std::vector<cv::Point>> contours;
+        cv::findContours(filtframe, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+        for (const auto &contour : contours) {
+            if(cv::contourArea(contour) > color_ratio * static_cast<double>(size))
+                color = static_cast<Color::color>(i / 2);
         }
     }
     cv::cvtColor(frame, frame, cv::COLOR_HSV2BGR);
