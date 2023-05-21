@@ -120,7 +120,7 @@ Color::color color_detect(const cv::Mat &frame)
         //     color_ratio = cur_ratio;
         // }
         std::vector<std::vector<cv::Point>> contours;
-        cv::findContours(filtframe, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+        cv::findContours(filt_frame, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
         for (const auto &contour : contours) {
             if(cv::contourArea(contour) > color_ratio * static_cast<double>(size))
                 color = static_cast<Color::color>(i / 2);
