@@ -178,6 +178,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
     motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
   while (encoder < ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD)))
   {
+    /*
     if (abs(orientation(Coord::Y, BOS[0])) > 40)
     {
       while (abs(orientation(Coord::Y, BOS[0])) > 40)
@@ -192,6 +193,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
       motorReset();
       return Move::RAMP;
     }
+    */
     uint16_t left = distance(VLX[Dir::W]) / 10;
     uint16_t right = distance(VLX[Dir::E]) / 10;
     uint16_t up = distance(VLX[Dir::N]) / 10;
@@ -228,7 +230,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
       colors = tiles(COLOR[0]);
     else
       colors = tiles(COLOR[1]);
-    if (colors.R < 300 && colors.G < 300 && colors.B < 300)
+    if (colors.R < 500 && colors.G < 500 && colors.B < 500)
     {
       uint16_t reverse = encoder;
       motorReset();
