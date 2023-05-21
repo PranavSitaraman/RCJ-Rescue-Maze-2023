@@ -1,5 +1,4 @@
 #include "global.hpp"
-#include <deque>
 #include <queue>
 #include <unordered_map>
 #include <iostream>
@@ -87,18 +86,15 @@ std::stack<std::uint8_t> Search::search() const
             }
             return dir;
         }
-        std::deque<uint8_t> next;
-        next.push_back(cd);
-        next.push_back((cd + 2) % 4);
-        next.push_back((cd + 1) % 4);
-        next.push_back((cd + 3) % 4);
-        auto rd = std::random_device {}; 
-        auto rng = std::default_random_engine { rd() };
-        std::shuffle(next.begin(), next.end(), rng);
+        std::queue<uint8_t> next;
+        next.push(cd);
+        next.push((cd + 2) % 4);
+        next.push((cd + 1) % 4);
+        next.push((cd + 3) % 4);
         while (!next.empty())
         {   
             std::uint8_t i = next.front();
-            next.pop_front();
+            next.pop();
             Pos p1 = current_tile;
             if (!map[p1.y][p1.x][i] && !map.adj(p1.y, p1.x, i))
             {
