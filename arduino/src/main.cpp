@@ -176,10 +176,10 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
     {
       if (orientation(Coord::Y, BOS[0]) < -15)
         for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
-          motors[i].run(motorSpeed * 1.5 * (dir[i] ? 1 : -1));
+          motors[i].run(motorSpeed * 0.5 * (dir[i] ? 1 : -1));
       else
         for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
-          motors[i].run(motorSpeed * 0.5 * (dir[i] ? 1 : -1));
+          motors[i].run(motorSpeed * 1.5 * (dir[i] ? 1 : -1));
     }
     uint16_t left = distance(VLX[Dir::W]) / 10;
     uint16_t right = distance(VLX[Dir::E]) / 10;
