@@ -171,6 +171,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
 {
   bool alreadysilver = false;
   bool alreadyblue = false;
+  bool flashed = false;
   static constexpr float kp = 0.0005;
   double b = motorSpeed;
   motorSpeed *= 255;
@@ -178,6 +179,13 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
     motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
   while (encoder < ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD)))
   {
+    if (!flashed)
+    {
+      digitalWrite(LED, HIGH);
+      delay(1000);
+      digitalWrite(LED, LOW);
+      flashed = true;
+    }
     /*
     if (abs(orientation(Coord::Y, BOS[0])) > 40)
     {
