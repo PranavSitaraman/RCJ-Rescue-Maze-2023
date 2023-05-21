@@ -346,7 +346,7 @@ void setup()
     tof.setTimeout(500);
     tof.init();
   }
-  for (int i = 0; i < sizeof(COLOR)/sizeof(COLOR*); i++)
+  for (int i = 0; i < sizeof(COLOR)/sizeof(*COLOR); i++)
   {
     tcaselect(COLOR[i]);
     color[i].begin();
