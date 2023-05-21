@@ -94,6 +94,8 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 serial.write(static_cast<std::uint8_t>(0));
                 serial.write(n_kits);
                 serial.write(i);
+                while (!serial.available());
+                serial.read();
             }
         }
         if (cv::waitKey(5) & 0xFF == 'q')
