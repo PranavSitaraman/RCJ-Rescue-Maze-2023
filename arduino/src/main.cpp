@@ -277,7 +277,12 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
   if (alreadyblue)
     delay(5000);
   if (alreadysilver)
+  {
+    digitalWrite(LED, HIGH);
+  delay(1000);
+  digitalWrite(LED, LOW);
     return Move::SILVER;
+  }
   return Move::SUCCESS;
 }
 bool forward(double a = 29, double motorSpeed = DEFAULT_MOTOR)
