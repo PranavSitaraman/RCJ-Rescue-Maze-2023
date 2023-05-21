@@ -238,7 +238,10 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
     else if (colors.R < 2000 && colors.G < 2000 && colors.B > 4 * colors.R && !alreadyblue)
       alreadyblue = true; 
     else if ((colors.R > 10000 || colors.G > 10000 || colors.B > 10000) && !alreadysilver)
+    {
+      digitalWrite(LED, HIGH);
       alreadysilver = true;
+    }
     if (Serial.available())
     {
       Serial.read();
