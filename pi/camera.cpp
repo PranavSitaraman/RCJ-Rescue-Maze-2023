@@ -42,10 +42,6 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
     std::this_thread::sleep_for(std::chrono::seconds(3));
     while (state != ThreadState::STOP)
     {
-        std::unique_lock<std::mutex> cond_lock(map_lock);
-        map_cv.wait(cond_lock, [&search, &state]
-                    { return !(*search)->get_current_vic() || state == ThreadState::STOP; });
-        cond_lock.unlock();
         for (std::uint8_t i = 0; i < caps.size() && state != ThreadState::STOP; i++)
         {
             caps[i] >> frame;
@@ -88,7 +84,6 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             if (n_kits || vic)
             {
                 std::cout << "detect" << std::endl;
-                (*search)->set_current_vic();
                 serial.write(static_cast<std::uint8_t>(0));
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
                 serial.write(n_kits);
