@@ -15,8 +15,8 @@
 #include "search.hpp"
 #include "Serial.hpp"
 namespace fs = std::filesystem;
-constexpr auto SIZE_THRESH = 60;
-constexpr auto SLICE_SIZE_THRESH = 120;
+constexpr auto SIZE_THRESH = 50;
+constexpr auto SLICE_SIZE_THRESH = 100;
 void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lock, std::condition_variable &map_cv)
 {
     std::string port;
@@ -142,7 +142,7 @@ Letter::letter letter_detect(cv::Mat &frame)
         auto angle = minRect.angle;
         if (rw < SIZE_THRESH || rh < SIZE_THRESH)
             continue;
-        if (rw / rh > 1.7 || rh / rw > 1.7)
+        if (rw / rh > 2 || rh / rw > 2)
             continue;
         cv::Mat letter = 255 - frame(cv::boundingRect(contour)).clone();
         int mxsz = std::max(letter.cols, letter.rows);
