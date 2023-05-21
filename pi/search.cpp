@@ -213,7 +213,7 @@ void Search::check_walls()
         std::uint16_t val = -1;
         std::cin >> val;
 #endif
-        if (val <= 150)
+        if (val <= 200)
             map[y][x][(i + cd + 4) % 4] = true;
     }
     new_length += (!map[y][x][Dir::E] && x == map.length() - 1);
