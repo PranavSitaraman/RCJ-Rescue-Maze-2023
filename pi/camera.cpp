@@ -15,9 +15,8 @@
 #include "search.hpp"
 #include "Serial.hpp"
 namespace fs = std::filesystem;
-constexpr auto SIZE_THRESH = 50;
-constexpr auto SLICE_SIZE_THRESH = 100;
-constexpr auto CONT_SIZE_THRESH = 20000;
+constexpr auto SIZE_THRESH = 60;
+constexpr auto SLICE_SIZE_THRESH = 120;
 void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lock, std::condition_variable &map_cv)
 {
     std::string port;
@@ -56,15 +55,15 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             {
             case Color::RED:
                 n_kits = 1;
-                std::cout << "red" << std::endl;
+            //    std::cout << "red" << std::endl;
                 break;
             case Color::YELLOW:
                 n_kits = 1;
-                 std::cout << "yellow" << std::endl;
+            //     std::cout << "yellow" << std::endl;
                 break;
             case Color::GREEN:
                 vic = true;
-                std::cout << "green" << std::endl;
+            //    std::cout << "green" << std::endl;
                 break;
             case Color::UNKNOWN:
                 break;
@@ -143,7 +142,7 @@ Letter::letter letter_detect(cv::Mat &frame)
         auto angle = minRect.angle;
         if (rw < SIZE_THRESH || rh < SIZE_THRESH)
             continue;
-        if (rw / rh > 2 || rh / rw > 2)
+        if (rw / rh > 1.7 || rh / rw > 1.7)
             continue;
         cv::Mat letter = 255 - frame(cv::boundingRect(contour)).clone();
         int mxsz = std::max(letter.cols, letter.rows);
