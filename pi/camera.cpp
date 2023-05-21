@@ -31,7 +31,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
         }
     }
     Serial serial(port, 9600);
-    std::array<cv::VideoCapture, 1> caps{cv::VideoCapture(0, cv::CAP_V4L2) /*, cv::VideoCapture(1, cv::CAP_V4L2)*/};
+    std::array<cv::VideoCapture, 2> caps{cv::VideoCapture(0, cv::CAP_V4L2), cv::VideoCapture(1, cv::CAP_V4L2)};
     for (auto &cap : caps)
     {
         cap.set(cv::CAP_PROP_BUFFERSIZE, 1);
@@ -40,7 +40,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
     }
     state = ThreadState::STARTED;
     cv::Mat frame;
-    //std::this_thread::sleep_for(std::chrono::seconds(3));
+    std::this_thread::sleep_for(std::chrono::seconds(3));
     while (state != ThreadState::STOP)
     {
         std::unique_lock<std::mutex> cond_lock(map_lock);
@@ -56,15 +56,15 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             {
             case Color::RED:
                 n_kits = 1;
-            //    std::cout << "red" << std::endl;
+                std::cout << "red" << std::endl;
                 break;
             case Color::YELLOW:
                 n_kits = 1;
-            //     std::cout << "yellow" << std::endl;
+                 std::cout << "yellow" << std::endl;
                 break;
             case Color::GREEN:
                 vic = true;
-            //    std::cout << "green" << std::endl;
+                std::cout << "green" << std::endl;
                 break;
             case Color::UNKNOWN:
                 break;
@@ -73,15 +73,15 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             {
             case Letter::H:
                 n_kits = 3;
-            //    std::cout << "H" << std::endl;
+                std::cout << "H" << std::endl;
                 break;
             case Letter::S:
                 n_kits = 2;
-            //    std::cout << "S" << std::endl;
+                std::cout << "S" << std::endl;
                 break;
             case Letter::U:
                 vic = true;
-            //    std::cout << "U" << std::endl;
+                std::cout << "U" << std::endl;
                 break;
             case Letter::UNKNOWN:
                 break;
@@ -99,7 +99,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             }
             */
         }
-        if (cv::waitKey(50) & 0xFF == 'q')
+        if (cv::waitKey(5) & 0xFF == 'q')
             break;
     }
 }
