@@ -172,13 +172,6 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
     motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
   while (encoder < ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD)))
   {
-    if (!flashed)
-    {
-      digitalWrite(LED, HIGH);
-      delay(1000);
-      digitalWrite(LED, LOW);
-      flashed = true;
-    }
     /*
     if (abs(orientation(Coord::Y, BOS[0])) > 40)
     {
@@ -351,6 +344,23 @@ void setup()
   dirServo.write(90);
   motorReset();
   Serial2.write((uint8_t)1);
+  while (true)
+  {
+    Color colors = tiles(0);
+    Serial.print(colors.R);
+    Serial.print("\t");
+    Serial.print(colors.G);
+    Serial.print("\t");
+    Serial.print(colors.B);
+    serial.print("\t\t");
+    Color colors = tiles(1);
+    Serial.print(colors.R);
+    Serial.print("\t");
+    Serial.print(colors.G);
+    Serial.print("\t");
+    Serial.print(colors.B);
+    Serial.println();
+  }
 }
 void loop()
 {
