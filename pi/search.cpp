@@ -1,5 +1,5 @@
 #include "global.hpp"
-#include <dequeue>
+#include <deque>
 #include <unordered_map>
 #include <iostream>
 #include <filesystem>
@@ -86,7 +86,7 @@ std::stack<std::uint8_t> Search::search() const
             }
             return dir;
         }
-        std::dequeue<uint8_t> next;
+        std::deque<uint8_t> next;
         next.push(cd);
         next.push((cd + 2) % 4);
         next.push((cd + 1) % 4);
