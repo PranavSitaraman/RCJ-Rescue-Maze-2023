@@ -3,7 +3,10 @@
 #include <unordered_map>
 #include <iostream>
 #include <filesystem>
+#include <algorithm>
+#include <random>
 #include <fstream>
+#include <iterator>
 #include <string.h>
 #include "search.hpp"
 #include "tile.hpp"
@@ -88,6 +91,9 @@ std::stack<std::uint8_t> Search::search() const
         next.push((cd + 2) % 4);
         next.push((cd + 1) % 4);
         next.push((cd + 3) % 4);
+        auto rd = std::random_device {}; 
+        auto rng = std::default_random_engine { rd() };
+        std::shuffle(next.front(), next.back(), rng);
         while (!next.empty())
         {
             std::uint8_t i = next.front();
