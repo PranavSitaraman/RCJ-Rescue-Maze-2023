@@ -167,6 +167,7 @@ uint8_t Search::move(std::stack<std::uint8_t> &path)
             std::cout << "silver" << std::endl;
             silver = true;
         case Result::result::SUCCESS:
+            std::cout << "success" << std::endl;
             break;
         }
         switch (path.top())
