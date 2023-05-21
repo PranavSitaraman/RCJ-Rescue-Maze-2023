@@ -96,7 +96,8 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 serial.write(i);
                 std::cout << "detect waiting" << std::endl;
                 while (!serial.available());
-                serial.read();
+                char a;
+                serial.read(a);
                 std::cout << "detect done" << std::endl;
             }
         }
