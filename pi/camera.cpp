@@ -104,7 +104,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
 }
 Color::color color_detect(const cv::Mat &frame)
 {
-    static const std::array<cv::Scalar, 6> bounds{cv::Scalar(100, 100, 0), cv::Scalar(150, 255, 200), cv::Scalar(0, 100, 0), cv::Scalar(30, 255, 200), cv::Scalar(30, 100, 0), cv::Scalar(100, 255, 200)};
+    static const std::array<cv::Scalar, 6> bounds{cv::Scalar(150, 100, 0), cv::Scalar(200, 255, 200), cv::Scalar(0, 100, 0), cv::Scalar(30, 255, 175), cv::Scalar(30, 100, 0), cv::Scalar(100, 255, 200)};
     auto color_ratio = 1 / 20.;
     auto color = Color::UNKNOWN;
     cv::cvtColor(frame, frame, cv::COLOR_BGR2HSV);
