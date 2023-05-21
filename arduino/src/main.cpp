@@ -238,7 +238,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
       colors = tiles(0);
     else
       colors = tiles(1);
-    if (colors.R < 500 && colors.G < 500 && colors.B < 500)
+    if (colors.R < 300 && colors.G < 300 && colors.B < 300)
     {
       uint16_t reverse = encoder;
       motorReset();
