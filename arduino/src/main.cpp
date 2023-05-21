@@ -353,7 +353,7 @@ void setup()
     Serial.print("\t");
     Serial.print(colors.B);
     serial.print("\t\t");
-    Color colors = tiles(1);
+    colors = tiles(1);
     Serial.print(colors.R);
     Serial.print("\t");
     Serial.print(colors.G);
