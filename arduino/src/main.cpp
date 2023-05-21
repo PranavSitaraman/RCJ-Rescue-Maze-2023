@@ -163,6 +163,8 @@ int16_t orientation(uint8_t coord, uint16_t port = BOS[0])
 uint8_t move(const bool dir[2], double a, double motorSpeed)
 {
   bool alreadysilver = false;
+  bool alreadyblue = false;
+  bool flashed = false;
   static constexpr float kp = 0.0005;
   double b = motorSpeed;
   motorSpeed *= 255;
@@ -233,6 +235,8 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
       motorReset();
       return Move::BLACK;
     }
+    else if (colors.R < 2000 && colors.G < 2000 && colors.B > 4 * colors.R && !alreadyblue)
+      alreadyblue = true; 
     else if (colors.R > 15000 || colors.G > 15000 || colors.B > 15000 && !alreadysilver)
       alreadysilver = true;
     if (Serial.available())
@@ -268,12 +272,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
   }
   */
   motorReset();
-  Color colors;
-  if (dir[0])
-    colors = tiles(0);
-  else
-    colors = tiles(1);
-  if (colors.R < 2000 && colors.G < 2000 && colors.B > 4 * colors.R) 
+  if (alreadyblue)
     delay(5000);
   if (alreadysilver)
     return Move::SILVER;
