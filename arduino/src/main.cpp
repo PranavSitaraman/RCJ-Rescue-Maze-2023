@@ -172,19 +172,19 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
     motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
   while (encoder < ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD)))
   {
-    if (abs(orientation(Coord::Y, BOS[0])) > 20)
+    if (abs(orientation(Coord::Y, BOS[0])) > 10)
     {
-      while (abs(orientation(Coord::Y, BOS[0])) > 20)
+      while (abs(orientation(Coord::Y, BOS[0])) > 10)
       {
-        if (orientation(Coord::Y, BOS[0]) < -20)
+        if (orientation(Coord::Y, BOS[0]) < -10)
           for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
             motors[i].run(motorSpeed * 1.5 * (dir[i] ? 1 : -1));
         else
           for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
             motors[i].run(motorSpeed * 0.5 * (dir[i] ? 1 : -1));
       }
-      motorReset();
-      return Move::RAMP;
+      //motorReset();
+      //return Move::RAMP;
     }
     uint16_t left = distance(VLX[Dir::W]) / 10;
     uint16_t right = distance(VLX[Dir::E]) / 10;
