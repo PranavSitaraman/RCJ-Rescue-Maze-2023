@@ -1,5 +1,5 @@
 #include "global.hpp"
-#include <queue>
+#include <dequeue>
 #include <unordered_map>
 #include <iostream>
 #include <filesystem>
@@ -86,16 +86,16 @@ std::stack<std::uint8_t> Search::search() const
             }
             return dir;
         }
-        std::queue<uint8_t> next;
+        std::dequeue<uint8_t> next;
         next.push(cd);
         next.push((cd + 2) % 4);
         next.push((cd + 1) % 4);
         next.push((cd + 3) % 4);
         auto rd = std::random_device {}; 
         auto rng = std::default_random_engine { rd() };
-        std::shuffle(next.front(), next.back(), rng);
+        std::shuffle(next.begin(), next.end(), rng);
         while (!next.empty())
-        {
+        {   
             std::uint8_t i = next.front();
             next.pop();
             Pos p1 = current_tile;
