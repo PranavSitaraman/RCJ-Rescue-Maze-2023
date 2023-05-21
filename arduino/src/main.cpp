@@ -165,7 +165,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
   bool alreadysilver = false;
   bool alreadyblue = false;
   bool flashed = false;
-  static constexpr float kp = 0.0005;
+  static constexpr float kp = 0.0002;
   double b = motorSpeed;
   motorSpeed *= 255;
   for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
