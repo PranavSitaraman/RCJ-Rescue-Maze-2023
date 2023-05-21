@@ -88,9 +88,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             if (n_kits || vic)
             {
                 std::cout << "detect" << std::endl;
-                cond_lock.lock();
                 (*search)->set_current_vic();
-                cond_lock.unlock();
                 serial.write(static_cast<std::uint8_t>(0));
                 std::this_thread::sleep_for(std::chrono::milliseconds(10));
                 serial.write(n_kits);
