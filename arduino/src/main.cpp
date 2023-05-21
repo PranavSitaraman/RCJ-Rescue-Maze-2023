@@ -144,14 +144,7 @@ Color tiles(uint16_t port)
 {
   float sensorValues[AS726x_NUM_CHANNELS];
   tcaselect(COLOR[port]);
-  color[port].startMeasurement();
-  bool rdy = false;
-  while (!rdy)
-  {
-    delay(5);
-    rdy = color[port].dataReady();
-  }
-  color[port].drvOn();
+  while (!color[port].dataReady());
   color[port].readCalibratedValues(sensorValues);
   Color colors = {sensorValues[AS726x_RED], sensorValues[AS726x_GREEN], sensorValues[AS726x_BLUE]};
   return colors;
@@ -350,6 +343,8 @@ void setup()
   {
     tcaselect(COLOR[i]);
     color[i].begin();
+    color[i].setConversionType(MODE_2);
+    color[i].drvOn();
   }
   attachInterrupt(digitalPinToInterrupt(ENC), &encoderISR, RISING);
   dirServo.attach(A6);
