@@ -44,12 +44,12 @@ namespace Move
 constexpr auto RESET = Dir::W + 1;
 MeMegaPiDCMotor motors[2] = {MeMegaPiDCMotor(PORT1B), MeMegaPiDCMotor(PORT2B)};
 VL53L0X tof;
-Adafruit_AS726x color;
+Adafruit_AS726x color[2];
 Adafruit_BNO055 bno(55);
 Servo dirServo;
 constexpr uint8_t VLX[]{6, 7, 1, 0};
 constexpr uint8_t BOS[]{5};
-constexpr uint8_t COLOR[]{2, 3};
+constexpr uint8_t COLOR[]{3, 2};
 constexpr uint8_t ENC = 18;
 constexpr uint8_t DIST_THRESH = 10;
 constexpr uint8_t DIST_THRESH2 = 10;
@@ -140,19 +140,19 @@ uint16_t distance(uint16_t port = VLX[0])
   tcaselect(port);
   return tof.readRangeSingleMillimeters();
 }
-Color tiles(uint16_t port = COLOR[0])
+Color tiles(uint16_t port)
 {
   float sensorValues[AS726x_NUM_CHANNELS];
-  tcaselect(port);
-  color.startMeasurement();
+  tcaselect(COLOR[port]);
+  color[port].startMeasurement();
   bool rdy = false;
   while (!rdy)
   {
     delay(5);
-    rdy = color.dataReady();
+    rdy = color[port].dataReady();
   }
-  color.drvOn();
-  color.readCalibratedValues(sensorValues);
+  color[port].drvOn();
+  color[port].readCalibratedValues(sensorValues);
   Color colors = {sensorValues[AS726x_RED], sensorValues[AS726x_GREEN], sensorValues[AS726x_BLUE]};
   return colors;
 }
@@ -235,9 +235,9 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
         motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
     Color colors;
     if (dir[0])
-      colors = tiles(COLOR[0]);
+      colors = tiles(0);
     else
-      colors = tiles(COLOR[1]);
+      colors = tiles(1);
     if (colors.R < 500 && colors.G < 500 && colors.B < 500)
     {
       uint16_t reverse = encoder;
@@ -346,10 +346,10 @@ void setup()
     tof.setTimeout(500);
     tof.init();
   }
-  for (auto port : COLOR)
+  for (int i = 0; i < sizeof(COLOR)/sizeof(COLOR*); i++)
   {
-    tcaselect(port);
-    color.begin();
+    tcaselect(COLOR[i]);
+    color[i].begin();
   }
   attachInterrupt(digitalPinToInterrupt(ENC), &encoderISR, RISING);
   dirServo.attach(A6);
