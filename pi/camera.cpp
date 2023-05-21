@@ -85,7 +85,6 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             case Letter::UNKNOWN:
                 break;
             }
-            /*
             if (n_kits || vic)
             {
                 std::cout << "detect" << std::endl;
@@ -96,7 +95,6 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 serial.write(n_kits);
                 serial.write(i);
             }
-            */
         }
         if (cv::waitKey(5) & 0xFF == 'q')
             break;
