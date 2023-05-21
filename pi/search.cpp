@@ -164,10 +164,8 @@ uint8_t Search::move(std::stack<std::uint8_t> &path)
             cd = (cd + 2) % 4;
             return 2;
         case Result::result::SILVER:
-            std::cout << "silver" << std::endl;
             silver = true;
         case Result::result::SUCCESS:
-            std::cout << "success" << std::endl;
             break;
         }
         switch (path.top())

@@ -235,9 +235,9 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
       motorReset();
       return Move::BLACK;
     }
-    else if (colors.R < 2000 && colors.G < 2000 && colors.B > 4 * colors.R && !alreadyblue)
+    else if (colors.R < 2000 && colors.G < 2000 && colors.B > 4 * colors.R && !alreadyblue && encoder > 0.5 * ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD)))
       alreadyblue = true; 
-    else if ((colors.R > 15000 || colors.G > 15000 || colors.B > 15000) && !alreadysilver)
+    else if ((colors.R > 15000 || colors.G > 15000 || colors.B > 15000) && !alreadysilver && encoder > 0.5 * ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD)))
     {
       alreadysilver = true;
     }
