@@ -161,14 +161,10 @@ uint8_t Search::move(std::stack<std::uint8_t> &path)
             return Result::result::BLACK;
         }
         case Result::result::RAMP:
-        {
             cd = (cd + 2) % 4;
             return 2;
-        }
         case Result::result::SILVER:
-        {
             silver = true;
-        }
         case Result::result::SUCCESS:
             break;
         }

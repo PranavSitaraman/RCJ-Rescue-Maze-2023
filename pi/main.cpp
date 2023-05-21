@@ -89,7 +89,6 @@ restart:
         case Result::result::SUCCESS:
         {
             std::cout << "success" << std::endl;
-            search->print_map();
             search->check_walls();
             search->print_map();
             break;
