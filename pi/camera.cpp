@@ -57,16 +57,14 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 n_kits = 1;
                 std::cout << "red" << std::endl;
                 break;
-                /*
             case Color::YELLOW:
                 n_kits = 1;
-                 std::cout << "yellow" << std::endl;
+                std::cout << "yellow" << std::endl;
                 break;
             case Color::GREEN:
                 vic = true;
                 std::cout << "green" << std::endl;
                 break;
-                */
             case Color::UNKNOWN:
                 break;
             }
@@ -76,7 +74,6 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 n_kits = 3;
                 std::cout << "H" << std::endl;
                 break;
-                /*
             case Letter::S:
                 n_kits = 2;
                 std::cout << "S" << std::endl;
@@ -85,7 +82,6 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 vic = true;
                 std::cout << "U" << std::endl;
                 break;
-                */
             case Letter::UNKNOWN:
                 break;
             }
@@ -117,19 +113,12 @@ Color::color color_detect(const cv::Mat &frame)
     for (std::uint8_t i = 0; i < bounds.size() && color == Color::UNKNOWN; i += 2)
     {
         cv::inRange(frame, bounds[i], bounds[i + 1], filt_frame);
-        // auto nonzero = cv::countNonZero(filt_frame);
         auto size = filt_frame.cols * filt_frame.rows;
-        // if (double cur_ratio; (cur_ratio = nonzero / static_cast<double>(size)) > color_ratio)
-        // {
-        //     color = static_cast<Color::color>(i / 2);
-        //     color_ratio = cur_ratio;
-        // }
         std::vector<std::vector<cv::Point>> contours;
         cv::findContours(filt_frame, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-        for (const auto &contour : contours) {
-            if(cv::contourArea(contour) > color_ratio * static_cast<double>(size))
+        for (const auto &contour : contours)
+            if (cv::contourArea(contour) > color_ratio * static_cast<double>(size))
                 color = static_cast<Color::color>(i / 2);
-        }
     }
     cv::cvtColor(frame, frame, cv::COLOR_HSV2BGR);
     return color;

@@ -120,9 +120,12 @@ void dropL()
 }
 void handleVictim()
 {
-  while (!Serial.available());
+  while (!Serial.available())
+    ;
   uint8_t val = Serial.read();
-  while (!Serial.available());
+  delay(10);
+  while (!Serial.available())
+    ;
   uint8_t side = Serial.read();
   digitalWrite(LED, HIGH);
   delay(5000);
@@ -130,10 +133,11 @@ void handleVictim()
   for (uint8_t i = 0; i < val; i++)
   {
     if (side == 0)
-      dropL();
-    if (side == 1)
       dropR();
+    if (side == 1)
+      dropL();
   }
+  delay(10);
 }
 uint16_t distance(uint16_t port = VLX[0])
 {
@@ -144,7 +148,8 @@ Color tiles(uint16_t port)
 {
   float sensorValues[AS726x_NUM_CHANNELS];
   tcaselect(COLOR[port]);
-  while (!color[port].dataReady());
+  while (!color[port].dataReady())
+    ;
   color[port].readCalibratedValues(sensorValues);
   Color colors = {sensorValues[AS726x_RED], sensorValues[AS726x_GREEN], sensorValues[AS726x_BLUE]};
   return colors;
@@ -165,7 +170,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
   bool alreadysilver = false;
   bool alreadyblue = false;
   bool flashed = false;
-  static constexpr float kp = 0.0002;
+  static constexpr float kp = 0.0001;
   double b = motorSpeed;
   motorSpeed *= 255;
   for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
@@ -229,7 +234,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
       return Move::BLACK;
     }
     else if (colors.R < 2000 && colors.G < 2000 && colors.B > 4 * colors.R && !alreadyblue && encoder > 0.65 * ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD)))
-      alreadyblue = true; 
+      alreadyblue = true;
     else if ((colors.R > 15000 || colors.G > 15000 || colors.B > 15000) && !alreadysilver && encoder > 0.65 * ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD)))
     {
       alreadysilver = true;
@@ -240,9 +245,13 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
       for (const auto motor : motors)
         motor.stop();
       handleVictim();
+      for (uint16_t i = 0; i < sizeof(motors) / sizeof(*motors); i++)
+        motors[i].run(motorSpeed * (dir[i] ? 1 : -1));
+      while (encoder < ((TICKS_PER_ROTATION * a) / (2 * PI * WHEEL_RAD)))
+        ;
+      break;
     }
   }
-  /*
   uint16_t up = distance(VLX[Dir::N]) / 10;
   uint16_t down = distance(VLX[Dir::S]) / 10;
   if (dir[0] && up < 2 * DIST_THRESH2)
@@ -265,7 +274,6 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
     while (down < DIST_THRESH2 / 2)
       down = distance(VLX[Dir::S]) / 10;
   }
-  */
   motorReset();
   if (alreadyblue)
     delay(5000);
@@ -324,7 +332,7 @@ void setup()
     tof.setTimeout(500);
     tof.init();
   }
-  for (int i = 0; i < sizeof(COLOR)/sizeof(*COLOR); i++)
+  for (int i = 0; i < sizeof(COLOR) / sizeof(*COLOR); i++)
   {
     tcaselect(COLOR[i]);
     color[i].begin();
