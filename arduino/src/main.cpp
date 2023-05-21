@@ -49,7 +49,7 @@ Adafruit_BNO055 bno(55);
 Servo dirServo;
 constexpr uint8_t VLX[]{6, 7, 1, 0};
 constexpr uint8_t BOS[]{5};
-constexpr uint8_t COLOR[]{3, 2};
+constexpr uint8_t COLOR[]{2, 3};
 constexpr uint8_t ENC = 18;
 constexpr uint8_t DIST_THRESH = 10;
 constexpr uint8_t DIST_THRESH2 = 10;
@@ -224,7 +224,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
       colors = tiles(0);
     else
       colors = tiles(1);
-    if (colors.R < 300 && colors.G < 300 && colors.B < 300)
+    if (colors.R < 400 && colors.G < 400 && colors.B < 400)
     {
       uint16_t reverse = encoder;
       motorReset();
@@ -344,23 +344,6 @@ void setup()
   dirServo.write(90);
   motorReset();
   Serial2.write((uint8_t)1);
-  while (true)
-  {
-    Color colors = tiles(0);
-    Serial.print(colors.R);
-    Serial.print("\t");
-    Serial.print(colors.G);
-    Serial.print("\t");
-    Serial.print(colors.B);
-    Serial.print("\t\t");
-    colors = tiles(1);
-    Serial.print(colors.R);
-    Serial.print("\t");
-    Serial.print(colors.G);
-    Serial.print("\t");
-    Serial.print(colors.B);
-    Serial.println();
-  }
 }
 void loop()
 {
