@@ -51,6 +51,7 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             caps[i] >> frame;
             std::uint8_t n_kits = 0;
             bool vic = false;
+            /*
             switch (color_detect(frame))
             {
             case Color::RED:
@@ -68,16 +69,17 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             case Color::UNKNOWN:
                 break;
             }
+            */
             switch (letter_detect(frame))
             {
             case Letter::H:
                 n_kits = 3;
                 std::cout << "H" << std::endl;
                 break;
-            case Letter::S:
-                n_kits = 2;
-                std::cout << "S" << std::endl;
-                break;
+            // case Letter::S:
+            //    n_kits = 2;
+            //    std::cout << "S" << std::endl;
+            //    break;
             case Letter::U:
                 vic = true;
                 std::cout << "U" << std::endl;
@@ -85,7 +87,6 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
             case Letter::UNKNOWN:
                 break;
             }
-            /*
             if (n_kits || vic)
             {
                 std::cout << "detect" << std::endl;
@@ -96,7 +97,6 @@ void detect(std::atomic<ThreadState> &state, Search **search, std::mutex &map_lo
                 serial.write(n_kits);
                 serial.write(i);
             }
-            */
         }
         if (cv::waitKey(5) & 0xFF == 'q')
             break;

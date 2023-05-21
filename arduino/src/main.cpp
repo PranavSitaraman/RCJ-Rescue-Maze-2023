@@ -130,9 +130,9 @@ void handleVictim()
   for (uint8_t i = 0; i < val; i++)
   {
     if (side == 0)
-      dropR();
-    if (side == 1)
       dropL();
+    if (side == 1)
+      dropR();
   }
 }
 uint16_t distance(uint16_t port = VLX[0])
