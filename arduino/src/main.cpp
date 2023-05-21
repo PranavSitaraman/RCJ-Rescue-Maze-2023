@@ -242,7 +242,7 @@ uint8_t move(const bool dir[2], double a, double motorSpeed)
       delay(5000);
       alreadyblue = true;
     }
-    else if (colors.R > 10000 && colors.G > 10000 && colors.B > 10000 && !alreadysilver)
+    else if (colors.R > 15000 || colors.G > 15000 || colors.B > 15000 && !alreadysilver)
       alreadysilver = true;
     if (Serial.available())
     {
